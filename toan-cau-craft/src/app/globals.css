@@ -31,3 +31,10 @@ body {
     text-wrap: balance;
   }
 }
+
+@font-face {
+  font-family: 'island-moments';
+  src: url('/fonts/IslandMoments-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
