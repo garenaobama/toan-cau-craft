@@ -8,6 +8,14 @@
   --background-end-rgb: 255, 255, 255;
 }
 
+@media (min-width: 1280px) {
+  .fixed-container {
+    transform: scale(calc(100vw / 1280));
+    width: 1280px;
+    transform-origin: center;
+  }
+}
+
 @media (prefers-color-scheme: dark) {
   :root {
     --foreground-rgb: 255, 255, 255;

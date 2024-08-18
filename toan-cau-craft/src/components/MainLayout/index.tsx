@@ -7,7 +7,7 @@ type MainLayoutProp = {
 }
 
 export const MainLayout = ({children} : MainLayoutProp):React.JSX.Element => {
-    return(<div className="container">
+    return(<div className="w-full fixed-container">
         <Header></Header>
         {children}
         <Footer></Footer>
