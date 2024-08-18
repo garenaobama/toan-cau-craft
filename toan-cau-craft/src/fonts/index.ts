@@ -7,6 +7,12 @@ export const cormorantRegular = Cormorant({
     weight: "400"
 })
 
+export const cormorantMedium = Cormorant({
+  subsets: ['latin'],
+  display: 'swap',
+  weight: "500"
+})
+
 //lato
 export const latoRegular = Lato({
   subsets: ['latin'],

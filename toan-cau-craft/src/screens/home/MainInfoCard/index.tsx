@@ -57,7 +57,7 @@ const NumberItem = ({ keyw, value }: { keyw: string; value: string }) => {
       <p
         className={twMerge(
           cormorantRegular.className,
-          "text-textPrimary text-6xl"
+          "text-textPrimary text-5xl"
         )}
       >
         {value}

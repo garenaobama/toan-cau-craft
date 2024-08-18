@@ -5,6 +5,8 @@ import { MainInfoCard } from "./MainInfoCard";
 import { twMerge } from "tailwind-merge";
 import { cormorantRegular, latoRegular } from "@/fonts";
 import { CategoryCard } from "@/components/CategoryCard";
+import { ButtonApp } from "@/components";
+import { ProductCard } from "@/components/ProductCard";
 
 export const Home = (): React.JSX.Element => {
   return (
@@ -102,6 +104,7 @@ export const Home = (): React.JSX.Element => {
                 porttitor ac et blandit. Pretium urna at ac purus aliquet
                 mauris. Sit feugiat mattis turpis congue justo.
               </p>
+              <ButtonApp className="mt-9" title="VIEW PRODUCTS" />
             </div>
           </div>
           <div className="col-span-1 h-96">
@@ -113,6 +116,69 @@ export const Home = (): React.JSX.Element => {
                 alt="product_link_image"
               />
             </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="flex flex-col text-4xl mt-24 m-24">
+        <h3
+          className={twMerge(
+            cormorantRegular.className,
+            "text-textPrimary text-center"
+          )}
+        >
+          NEW COLLECTION
+        </h3>
+        <div className="w-full mt-10">
+          <div className="grid grid-cols-4">
+            <ProductCard
+              className="col-span-1 m-4"
+              src="/images/demo_product_1.png"
+              name="Olpe"
+              category="Ceramic"
+            />
+            <ProductCard
+              className="col-span-1 m-4"
+              src="/images/demo_product_2.png"
+              name="Olpe"
+              category="Ceramic"
+            />
+            <ProductCard
+              className="col-span-1 m-4"
+              src="/images/demo_product_3.png"
+              name="Olpe"
+              category="Ceramic"
+            />
+            <ProductCard
+              className="col-span-1 m-4"
+              src="/images/demo_product_4.png"
+              name="Olpe"
+              category="Ceramic"
+            />
+            <ProductCard
+              className="col-span-1 m-4"
+              src="/images/demo_product_5.png"
+              name="Olpe"
+              category="Ceramic"
+            />
+            <ProductCard
+              className="col-span-1 m-4"
+              src="/images/demo_product_6.png"
+              name="Olpe"
+              category="Ceramic"
+            />
+            <ProductCard
+              className="col-span-1 m-4"
+              src="/images/demo_product_7.png"
+              name="Olpe"
+              category="Ceramic"
+            />
+            <ProductCard
+              className="col-span-1 m-4"
+              src="/images/demo_product_8.png"
+              name="Olpe"
+              category="Ceramic"
+            />
           </div>
         </div>
       </div>

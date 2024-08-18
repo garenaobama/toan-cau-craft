@@ -21,6 +21,7 @@ const config: Config = {
     colors:{
       //theme
       themeWhite: '#ffffff',
+      themeDark: '#060710',
 
       //text
       textPrimary: '#060710',
@@ -28,7 +29,11 @@ const config: Config = {
 
       //input
       inputPrimary: '#060710',
-      inputSecondary: '#A4A5AA'
+      inputSecondary: '#A4A5AA',
+
+      //decor
+      backgroundDecor500: '#A4A5AA',
+      backgroundDecor200: '#EAECF4'
     },
   },
   plugins: [],
