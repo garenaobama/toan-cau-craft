@@ -1,16 +1,10 @@
 "use client"
-import { Provider } from "react-redux";
-import { store } from "@/store/store";
-import App from "./app";
-import Image from "next/image";
-import { Images } from "@/images";
+import HomePage from "./home/page";
 
-export default function Home() {
+export default function Root() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between bg-themeWhite">
-      <Provider store={store}>
-        <App />
-      </Provider>
+    <main>
+        <HomePage />
     </main>
   );
 }

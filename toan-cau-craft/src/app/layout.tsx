@@ -1,6 +1,9 @@
+"use client";
 import { leagueSpartanRegular } from "@/fonts";
 import "./globals.css";
-import "tailwindcss"
+import { twMerge } from "tailwind-merge";
+import { Provider } from "react-redux";
+import { store } from "@/store/store";
 
 export default function RootLayout({
   children,
@@ -9,7 +12,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={leagueSpartanRegular.className}>{children}</body>
+      <body
+        className={twMerge(
+          leagueSpartanRegular.className,
+          "flex min-h-screen flex-col items-center justify-between bg-themeWhite"
+        )}
+      >
+        <Provider store={store}>{children}</Provider>
+      </body>
     </html>
   );
 }

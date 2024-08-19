@@ -1,6 +1,6 @@
 import { Images } from "@/images";
 import Image from "next/image";
-import { HomeBanner } from "../../components/TopBanner";
+import { TopBanner } from "../../components/TopBanner";
 import { MainInfoCard } from "./MainInfoCard";
 import { twMerge } from "tailwind-merge";
 import { cormorantRegular, latoRegular } from "@/fonts";
@@ -11,7 +11,7 @@ import { ProductCard } from "@/components/ProductCard";
 export const Home = (): React.JSX.Element => {
   return (
     <div>
-      <HomeBanner />
+      <TopBanner src="/images/home-bg.png" h1="Handicraft" h2="MADE WITH LOVE" description="Lorem ipsum dolor sit amet consectetur. Tempor faucibus sit iaculis arcu felis. Volutpat sollicitudin tortor aliquam maecenas porttitor ac et blandit. Pretium urna at ac purus aliquet mauris. Sit feugiat mattis turpis congue justo."/>
 
       <div className="flex justify-center -translate-y-10">
         <MainInfoCard />

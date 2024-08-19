@@ -13,6 +13,12 @@ export const cormorantMedium = Cormorant({
   weight: "500"
 })
 
+export const cormorantSemiBold = Cormorant({
+  subsets: ['latin'],
+  display: 'swap',
+  weight: "600"
+})
+
 //lato
 export const latoRegular = Lato({
   subsets: ['latin'],
@@ -25,4 +31,10 @@ export const leagueSpartanRegular = League_Spartan({
   subsets: ['latin'],
   display: 'swap',
   weight: "400"
+})
+
+export const leagueSpartanMedium = League_Spartan({
+  subsets: ['latin'],
+  display: 'swap',
+  weight: "500"
 })

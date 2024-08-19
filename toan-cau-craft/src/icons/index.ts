@@ -5,6 +5,7 @@ import Phone from './phone.svg'
 import FaceBookIcon from './facebook_icon.svg'
 import InstagramIcon from './instagram_icon.svg'
 import YoutubeIcon from './youtube_icon.svg'
+import ChevronDown from './chevron-down.svg'
 
 export const Icons = {
     SearchNormal: SearchNormal,
@@ -13,5 +14,6 @@ export const Icons = {
     Phone: Phone,
     InstagramIcon: InstagramIcon,
     YoutubeIcon: YoutubeIcon,
-    FaceBookIcon:FaceBookIcon
+    FaceBookIcon:FaceBookIcon,
+    ChevronDown:ChevronDown
 }

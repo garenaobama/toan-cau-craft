@@ -2,16 +2,22 @@
 @tailwind components;
 @tailwind utilities;
 
+/* 
+320px: For small mobile devices (e.g., older smartphones).
+480px: For larger mobile devices (e.g., newer smartphones).
+768px: For tablets (e.g., iPads in portrait mode).
+1024px: For tablets in landscape mode and small laptops.
+1440px: For larger desktops and high-resolution screens. 
+*/
+
 :root {
   --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
 }
 
-@media (min-width: 1280px) {
+@media (min-width: 1440px) {
   .fixed-container {
-    transform: scale(calc(100vw / 1280));
-    width: 1280px;
+    transform: scale(calc(100vw / 1440));
+    width: 1440px;
     transform-origin: center;
   }
 }
@@ -19,8 +25,6 @@
 @media (prefers-color-scheme: dark) {
   :root {
     --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
   }
 }
 
