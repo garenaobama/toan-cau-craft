@@ -43,7 +43,7 @@ export const TopBanner = ({
         >
           {h2}
         </h2>
-        <p className={twMerge(latoRegular.className, "max-w-screen-sm mt-6")}>
+        <p className={twMerge(latoRegular.className, "max-w-screen-sm mt-6 text-themeWhite")}>
           {description}
         </p>
       </div>
