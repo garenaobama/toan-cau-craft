@@ -5,6 +5,7 @@ import { cormorantSemiBold, latoRegular } from "@/fonts";
 import { Checkbox } from "@nextui-org/react";
 import { twMerge } from "tailwind-merge";
 import { FilterBox } from "./FilterBox";
+import PaginationApp from "@/components/PaginationApp";
 
 export const Products = (): React.JSX.Element => {
   return (
@@ -124,6 +125,9 @@ export const Products = (): React.JSX.Element => {
               name="Olpe"
               category="Ceramic"
             />
+          </div>
+          <div className="mt-10">
+            <PaginationApp/>
           </div>
         </div>
       </div>
