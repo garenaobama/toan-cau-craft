@@ -2,7 +2,9 @@ import { ProductCard } from "@/components/ProductCard";
 import { SearchBox } from "@/components/SearchBox";
 import { TopBanner } from "@/components/TopBanner";
 import { cormorantSemiBold, latoRegular } from "@/fonts";
+import { Checkbox } from "@nextui-org/react";
 import { twMerge } from "tailwind-merge";
+import { FilterBox } from "./FilterBox";
 
 export const Products = (): React.JSX.Element => {
   return (
@@ -26,25 +28,9 @@ export const Products = (): React.JSX.Element => {
       </div>
 
       <div className="mx-28 my-14 grid grid-cols-3">
-        <div className="col-span-1">
-          <div>
-            <h2
-              className={twMerge(
-                cormorantSemiBold.className,
-                "text-textPrimary text-lg"
-              )}
-            >
-              Category
-            </h2>
-            <SearchBox className="w-full mt-3" />
-            <div>
-              <FilterItem title="Recycled rubber products" />
-              <FilterItem title="Mother of pearl mosaic products" />
-              <FilterItem title="Buffalo horn products" />
-              <FilterItem title="Mother of pearl products" />
-              <FilterItem title="Wooden products" />
-            </div>
-          </div>
+        <div className="col-span-1 mr-8">
+          <FilterBox title="Category" data={Category}/>
+          <FilterBox className="mt-4" title="Type" data={Type}/>
         </div>
         <div className="col-span-2">
           <div className="grid grid-cols-3">
@@ -145,14 +131,39 @@ export const Products = (): React.JSX.Element => {
   );
 };
 
-const FilterItem = ({ title }: { title: string }) => {
-  return (
-    <div className="flex items-center">
-      <p
-        className={twMerge(latoRegular.className, "text-textPrimary text-base")}
-      >
-        {title}
-      </p>
-    </div>
-  );
-};
+
+const Category = [
+  {
+    value: "Recycled rubber products",
+  },
+  {
+    value: "Recycled rubber products",
+  },
+  {
+    value: "Recycled rubber products",
+  },
+  {
+    value: "Recycled rubber products",
+  },
+  {
+    value: "Recycled rubber products",
+  },
+];
+
+const Type = [
+  {
+    value: "Spoon/Fork",
+  },
+  {
+    value: "Comb",
+  },
+  {
+    value: "Chopticks",
+  },
+  {
+    value: "Dish/Plate",
+  },
+  {
+    value: "Bowl ",
+  },
+];

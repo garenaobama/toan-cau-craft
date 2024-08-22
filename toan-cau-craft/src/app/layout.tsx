@@ -2,8 +2,8 @@
 import { leagueSpartanRegular } from "@/fonts";
 import "./globals.css";
 import { twMerge } from "tailwind-merge";
-import { Provider } from "react-redux";
-import { store } from "@/store/store";
+import { NextUIProvider } from "@nextui-org/react";
+import { Providers } from "./provider";
 
 export default function RootLayout({
   children,
@@ -18,7 +18,7 @@ export default function RootLayout({
           "flex min-h-screen flex-col items-center justify-between bg-themeWhite"
         )}
       >
-        <Provider store={store}>{children}</Provider>
+          <Providers >{children}</Providers>
       </body>
     </html>
   );
