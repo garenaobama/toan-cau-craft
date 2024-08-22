@@ -1,5 +1,5 @@
 import { cormorantMedium, latoRegular } from "@/fonts"
-import Image from "next/image"
+import { Image } from "@nextui-org/react"
 import { twMerge } from "tailwind-merge"
 
 type ProductCardProps= {
@@ -13,7 +13,7 @@ export const ProductCard = ({src,category,name, className}: ProductCardProps) =>
     return(
         <div className={twMerge("",className)}>
             <div className="h-80 w-full overflow-hidden relative">
-                <Image fill objectFit="cover" src={src} alt="product image"/>
+                <Image src={src} alt="product image"/>
             </div>
             <div className="mt-4">
                 <p className={twMerge(cormorantMedium.className, "text-textPrimary text-xl")}>{name}</p>

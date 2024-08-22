@@ -20,6 +20,9 @@ const config: Config = {
       },
     },
     colors: {
+      //transparent
+      blurEffect: "#0000007a",
+
       //theme
       themeWhite: "#ffffff",
       themeDark: "#060710",
@@ -27,6 +30,7 @@ const config: Config = {
       //text
       textPrimary: "#060710",
       textSecondary: "#96969F",
+      textTertiary: "#D6D6E4",
 
       //input
       inputPrimary: "#060710",
