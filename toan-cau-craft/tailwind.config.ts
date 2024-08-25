@@ -43,6 +43,9 @@ const config: Config = {
       //decor
       backgroundDecor500: "#A4A5AA",
       backgroundDecor200: "#EAECF4",
+
+      //card:
+      anitiqueWhite: "#faebd7"
     },
   },
   darkMode: "class",
