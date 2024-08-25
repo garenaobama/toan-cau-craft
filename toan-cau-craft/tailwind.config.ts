@@ -14,6 +14,8 @@ const config: Config = {
       backgroundImage: {
         "custom-gradient":
           "linear-gradient(90deg, rgba(0,0,0,0.7455357142857143) 0%, rgba(255,255,255,0.1516981792717087) 100%)",
+        "vertical-gradient":
+          "linear-gradient(0deg, rgba(0,0,0,0.7455357142857143) 0%, rgba(255,255,255,0) 60%, rgba(255,255,255,0.1516981792717087) 100%)"
       },
       fontFamily: {
         "island-moments": ["island-moments", "sans-serif"],
@@ -22,6 +24,8 @@ const config: Config = {
     colors: {
       //transparent
       blurEffect: "#0000007a",
+      blurEffectWhite: "#ffffff85",
+      blurEffectGold: "#e39d4096",
 
       //theme
       themeWhite: "#ffffff",
