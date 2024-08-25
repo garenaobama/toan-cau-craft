@@ -272,7 +272,7 @@ export const ProductDetail = (): React.JSX.Element => {
         >
           {"You may be interested in"}
         </h2>
-        <div className="grid grid-cols-4 mt-8">
+        <div className="grid grid-cols-5 mt-8">
           <ProductCard
             onClick={() => {
               router.push("product-detail/demo-product-1");
@@ -309,7 +309,7 @@ export const ProductDetail = (): React.JSX.Element => {
             name="Olpe"
             category="Ceramic"
           />
-          {/* <ProductCard
+          <ProductCard
             onClick={() => {
               router.push("product-detail/demo-product-1");
             }}
@@ -317,7 +317,7 @@ export const ProductDetail = (): React.JSX.Element => {
             src="/images/demo_product_4.png"
             name="Olpe"
             category="Ceramic"
-          /> */}
+          />
         </div>
       </div>
     </div>

@@ -1,5 +1,5 @@
 import { cormorantMedium, latoRegular } from "@/fonts";
-import { Image } from "@nextui-org/react";
+import Image from "next/image";
 import { twMerge } from "tailwind-merge";
 
 type ProductCardProps = {
@@ -19,9 +19,9 @@ export const ProductCard = ({
 }: ProductCardProps) => {
   return (
     <button onClick={onClick} type="button" className={twMerge("group relative rounded-lg p-3 hover:bg-anitiqueWhite", className)}>
-      <div className="h-80 relative w-full overflow-hidden">
-        <div className="absolute flex">
-          <Image src={src} className="max-h-80" alt="product image" />
+      <div className="h-80 relative w-full overflow-hidden rounded-lg">
+        <div className="relative flex h-full">
+          <Image src={src} fill className="w-full" alt="product image" />
         </div>
         <div className="w-32 h-32 scale-0 group-hover:scale-100 transition duration-300 bg-themeWhite -top-16 -right-16 rounded-full absolute z-10 flex">
         </div>
