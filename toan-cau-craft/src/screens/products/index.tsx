@@ -1,3 +1,4 @@
+"use client";
 import { ProductCard } from "@/components/ProductCard";
 import { SearchBox } from "@/components/SearchBox";
 import { TopBanner } from "@/components/TopBanner";
@@ -6,8 +7,10 @@ import { Checkbox } from "@nextui-org/react";
 import { twMerge } from "tailwind-merge";
 import { FilterBox } from "./FilterBox";
 import PaginationApp from "@/components/PaginationApp";
+import { useRouter } from "next/navigation";
 
 export const Products = (): React.JSX.Element => {
+  const router = useRouter();
   return (
     <div>
       <TopBanner
@@ -30,96 +33,141 @@ export const Products = (): React.JSX.Element => {
 
       <div className="mx-28 my-14 grid grid-cols-3">
         <div className="col-span-1 mr-8">
-          <FilterBox title="Category" data={Category}/>
-          <FilterBox className="mt-4" title="Type" data={Type}/>
+          <FilterBox title="Category" data={Category} />
+          <FilterBox className="mt-4" title="Type" data={Type} />
         </div>
         <div className="col-span-2">
           <div className="grid grid-cols-3">
             <ProductCard
+              onClick={() => {
+                router.push("products/product-detail/demo-product-1");
+              }}
               className="col-span-1 m-4"
               src="/images/demo_product_1.png"
               name="Olpe"
               category="Ceramic"
             />
             <ProductCard
+              onClick={() => {
+                router.push("products/product-detail/demo-product-1");
+              }}
               className="col-span-1 m-4"
               src="/images/demo_product_2.png"
               name="Olpe"
               category="Ceramic"
             />
             <ProductCard
+              onClick={() => {
+                router.push("products/product-detail/demo-product-1");
+              }}
               className="col-span-1 m-4"
               src="/images/demo_product_3.png"
               name="Olpe"
               category="Ceramic"
             />
             <ProductCard
+              onClick={() => {
+                router.push("products/product-detail/demo-product-1");
+              }}
               className="col-span-1 m-4"
               src="/images/demo_product_4.png"
               name="Olpe"
               category="Ceramic"
             />
             <ProductCard
+              onClick={() => {
+                router.push("products/product-detail/demo-product-1");
+              }}
               className="col-span-1 m-4"
               src="/images/demo_product_5.png"
               name="Olpe"
               category="Ceramic"
             />
             <ProductCard
+              onClick={() => {
+                router.push("products/product-detail/demo-product-1");
+              }}
               className="col-span-1 m-4"
               src="/images/demo_product_6.png"
               name="Olpe"
               category="Ceramic"
             />
             <ProductCard
+              onClick={() => {
+                router.push("products/product-detail/demo-product-1");
+              }}
               className="col-span-1 m-4"
               src="/images/demo_product_7.png"
               name="Olpe"
               category="Ceramic"
             />
             <ProductCard
+              onClick={() => {
+                router.push("products/product-detail/demo-product-1");
+              }}
               className="col-span-1 m-4"
               src="/images/demo_product_8.png"
               name="Olpe"
               category="Ceramic"
             />
             <ProductCard
+              onClick={() => {
+                router.push("products/product-detail/demo-product-1");
+              }}
               className="col-span-1 m-4"
               src="/images/demo_product_1.png"
               name="Olpe"
               category="Ceramic"
             />
             <ProductCard
+              onClick={() => {
+                router.push("products/product-detail/demo-product-1");
+              }}
               className="col-span-1 m-4"
               src="/images/demo_product_2.png"
               name="Olpe"
               category="Ceramic"
             />
             <ProductCard
+              onClick={() => {
+                router.push("products/product-detail/demo-product-1");
+              }}
               className="col-span-1 m-4"
               src="/images/demo_product_3.png"
               name="Olpe"
               category="Ceramic"
             />
             <ProductCard
+              onClick={() => {
+                router.push("products/product-detail/demo-product-1");
+              }}
               className="col-span-1 m-4"
               src="/images/demo_product_4.png"
               name="Olpe"
               category="Ceramic"
             />
             <ProductCard
+              onClick={() => {
+                router.push("products/product-detail/demo-product-1");
+              }}
               className="col-span-1 m-4"
               src="/images/demo_product_5.png"
               name="Olpe"
               category="Ceramic"
             />
             <ProductCard
+              onClick={() => {
+                router.push("products/product-detail/demo-product-1");
+              }}
               className="col-span-1 m-4"
               src="/images/demo_product_6.png"
               name="Olpe"
               category="Ceramic"
             />
             <ProductCard
+              onClick={() => {
+                router.push("products/product-detail/demo-product-1");
+              }}
               className="col-span-1 m-4"
               src="/images/demo_product_7.png"
               name="Olpe"
@@ -127,14 +175,13 @@ export const Products = (): React.JSX.Element => {
             />
           </div>
           <div className="mt-10">
-            <PaginationApp/>
+            <PaginationApp />
           </div>
         </div>
       </div>
     </div>
   );
 };
-
 
 const Category = [
   {

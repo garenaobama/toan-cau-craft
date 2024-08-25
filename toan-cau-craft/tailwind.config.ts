@@ -20,6 +20,10 @@ const config: Config = {
       fontFamily: {
         "island-moments": ["island-moments", "sans-serif"],
       },
+      spacing: {
+        '128': '32rem',
+        '146': '36.5rem'
+      }
     },
     colors: {
       //transparent
@@ -43,9 +47,14 @@ const config: Config = {
       //decor
       backgroundDecor500: "#A4A5AA",
       backgroundDecor200: "#EAECF4",
+      backgroundDecor100: "#F0F0F3",
 
       //card:
-      anitiqueWhite: "#faebd7"
+      anitiqueWhite: "#faebd7",
+
+      //table 
+      tableBorder500: "#a4a5aa99",
+      tableBorder400: "#a4a5aa75"
     },
   },
   darkMode: "class",

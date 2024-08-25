@@ -1,4 +1,4 @@
-import { Images } from "@/images";
+"use client"
 import Image from "next/image";
 import { TopBanner } from "../../components/TopBanner";
 import { MainInfoCard } from "./MainInfoCard";
@@ -7,11 +7,19 @@ import { cormorantRegular, latoRegular } from "@/fonts";
 import { CategoryCard } from "@/components/CategoryCard";
 import { ButtonApp } from "@/components";
 import { ProductCard } from "@/components/ProductCard";
+import { useRouter } from "next/navigation";
 
 export const Home = (): React.JSX.Element => {
+  const router = useRouter();
+
   return (
     <div>
-      <TopBanner src="/images/home-bg.png" h1="Handicraft" h2="MADE WITH LOVE" description="Lorem ipsum dolor sit amet consectetur. Tempor faucibus sit iaculis arcu felis. Volutpat sollicitudin tortor aliquam maecenas porttitor ac et blandit. Pretium urna at ac purus aliquet mauris. Sit feugiat mattis turpis congue justo."/>
+      <TopBanner
+        src="/images/home-bg.png"
+        h1="Handicraft"
+        h2="MADE WITH LOVE"
+        description="Lorem ipsum dolor sit amet consectetur. Tempor faucibus sit iaculis arcu felis. Volutpat sollicitudin tortor aliquam maecenas porttitor ac et blandit. Pretium urna at ac purus aliquet mauris. Sit feugiat mattis turpis congue justo."
+      />
 
       <div className="flex justify-center -translate-y-10">
         <MainInfoCard />
@@ -29,11 +37,17 @@ export const Home = (): React.JSX.Element => {
         <div className="w-full mt-10">
           <div className="grid grid-cols-2">
             <CategoryCard
+              onClick={() => {
+                router.push("products");
+              }}
               className="col-span-1 m-4"
               src="/images/demo_cate_01.png"
               title="Recycled rubber products"
             />
             <CategoryCard
+              onClick={() => {
+                router.push("products");
+              }}
               className="col-span-1 m-4"
               src="/images/demo_cate_02.png"
               title="Mother of pearl mosaic products"
@@ -41,31 +55,49 @@ export const Home = (): React.JSX.Element => {
           </div>
           <div className="grid grid-cols-3">
             <CategoryCard
+              onClick={() => {
+                router.push("products");
+              }}
               className="col-span-1 m-4 h-80"
               src="/images/demo_cate_03.png"
               title="Buffalo horn products"
             />
             <CategoryCard
+              onClick={() => {
+                router.push("products");
+              }}
               className="col-span-1 m-4 h-80"
               src="/images/demo_cate_04.png"
               title="Mother of pearl products"
             />
             <CategoryCard
+              onClick={() => {
+                router.push("products");
+              }}
               className="col-span-1 m-4 h-80"
               src="/images/demo_cate_05.png"
               title="Wooden products"
             />
             <CategoryCard
+              onClick={() => {
+                router.push("products");
+              }}
               className="col-span-1 m-4 h-80"
               src="/images/demo_cate_06.png"
               title="Bamboo products"
             />
             <CategoryCard
+              onClick={() => {
+                router.push("products");
+              }}
               className="col-span-1 m-4 h-80"
               src="/images/demo_cate_07.png"
               title="Coconut products"
             />
             <CategoryCard
+              onClick={() => {
+                router.push("products");
+              }}
               className="col-span-1 m-4 h-80"
               src="/images/demo_cate_08.png"
               title="Lacquer products"
@@ -132,48 +164,72 @@ export const Home = (): React.JSX.Element => {
         <div className="w-full mt-10">
           <div className="grid grid-cols-4">
             <ProductCard
+              onClick={() => {
+                router.push("products/product-detail/demo-product-1");
+              }}
               className="col-span-1 m-4"
               src="/images/demo_product_1.png"
               name="Olpe"
               category="Ceramic"
             />
             <ProductCard
+              onClick={() => {
+                router.push("products/product-detail/demo-product-1");
+              }}
               className="col-span-1 m-4"
               src="/images/demo_product_2.png"
               name="Olpe"
               category="Ceramic"
             />
             <ProductCard
+              onClick={() => {
+                router.push("products/product-detail/demo-product-1");
+              }}
               className="col-span-1 m-4"
               src="/images/demo_product_3.png"
               name="Olpe"
               category="Ceramic"
             />
             <ProductCard
+              onClick={() => {
+                router.push("products/product-detail/demo-product-1");
+              }}
               className="col-span-1 m-4"
               src="/images/demo_product_4.png"
               name="Olpe"
               category="Ceramic"
             />
             <ProductCard
+              onClick={() => {
+                router.push("products/product-detail/demo-product-1");
+              }}
               className="col-span-1 m-4"
               src="/images/demo_product_5.png"
               name="Olpe"
               category="Ceramic"
             />
             <ProductCard
+              onClick={() => {
+                router.push("products/product-detail/demo-product-1");
+              }}
               className="col-span-1 m-4"
               src="/images/demo_product_6.png"
               name="Olpe"
               category="Ceramic"
             />
             <ProductCard
+              onClick={() => {
+                router.push("products/product-detail/demo-product-1");
+              }}
               className="col-span-1 m-4"
               src="/images/demo_product_7.png"
               name="Olpe"
               category="Ceramic"
             />
             <ProductCard
+              onClick={() => {
+                router.push("products/product-detail/demo-product-1");
+              }}
               className="col-span-1 m-4"
               src="/images/demo_product_8.png"
               name="Olpe"

@@ -19,11 +19,18 @@ export const cormorantSemiBold = Cormorant({
   weight: "600"
 })
 
+
 //lato
 export const latoRegular = Lato({
   subsets: ['latin'],
   display: 'swap',
   weight: "400"
+})
+
+export const latoBold = Lato({
+  subsets: ['latin'],
+  display: 'swap',
+  weight: "700"
 })
 
 //league spartan

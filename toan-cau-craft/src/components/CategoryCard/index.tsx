@@ -1,5 +1,5 @@
+"use client"
 import { cormorantRegular } from "@/fonts";
-import { Images } from "@/images";
 import Image from "next/image";
 import { twMerge } from "tailwind-merge";
 
@@ -7,13 +7,15 @@ export const CategoryCard = ({
   src,
   title,
   className,
+  onClick
 }: {
   src: string;
   title: string;
   className?: string;
+  onClick?:() => void;
 }) => {
   return (
-    <button type="button" className="group">
+    <button onClick={onClick} type="button" className="group">
       <div
         className={twMerge("relative h-96 overflow-hidden group", className)}
       >

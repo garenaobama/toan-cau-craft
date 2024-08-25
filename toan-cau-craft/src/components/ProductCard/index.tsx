@@ -7,6 +7,7 @@ type ProductCardProps = {
   category: string;
   name: string;
   className?: string;
+  onClick?:() => void;
 };
 
 export const ProductCard = ({
@@ -14,9 +15,10 @@ export const ProductCard = ({
   category,
   name,
   className,
+  onClick
 }: ProductCardProps) => {
   return (
-    <button type="button" className={twMerge("group relative rounded-lg p-3 hover:bg-anitiqueWhite", className)}>
+    <button onClick={onClick} type="button" className={twMerge("group relative rounded-lg p-3 hover:bg-anitiqueWhite", className)}>
       <div className="h-80 relative w-full overflow-hidden">
         <div className="absolute flex">
           <Image src={src} className="max-h-80" alt="product image" />
