@@ -7,15 +7,15 @@ import { twMerge } from "tailwind-merge";
 export const MainInfoCard = (): React.JSX.Element => {
   return (
     <AnimatePresence>
-      <div className="grid grid-cols-5 bg-themeWhite rounded-3xl overflow-hidden shadow-lg w-2/3">
-        <div className="col-span-2 bg-[url('/images/home-demo.png')]"></div>
-        <div className="col-span-3 bg-themeWhite">
-          <div className="m-11">
+      <div className="grid sm:w-2/3 p-5 sm:p-0 sm:grid-cols-5 bg-themeWhite rounded-3xl overflow-hidden shadow-lg">
+        <div className="hidden sm:block sm:col-span-2 bg-[url('/images/home-demo.png')]"></div>
+        <div className="sm:col-span-3 bg-themeWhite">
+          <div className="sm:m-11">
             <motion.h1
               initial={{ y: 25, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ duration: 0.15 }}
-              className="text-textPrimary font-island-moments text-6xl"
+              className="text-textPrimary font-island-moments text-4xl sm:text-6xl"
             >
               About us
             </motion.h1>
@@ -25,7 +25,7 @@ export const MainInfoCard = (): React.JSX.Element => {
               transition={{ duration: 0.5 }}
               className={twMerge(
                 cormorantRegular.className,
-                "text-textPrimary text-6xl"
+                "text-textPrimary text-4xl sm:text-6xl"
               )}
             >
               Handicraft
@@ -80,7 +80,7 @@ const NumberItem = ({ keyw, value }: { keyw: string; value: string }) => {
       <p
         className={twMerge(
           cormorantRegular.className,
-          "text-textPrimary text-5xl"
+          "text-textPrimary text-4xl sm:text-5xl"
         )}
       >
         {value}

@@ -25,7 +25,7 @@ export const Home = (): React.JSX.Element => {
         <MainInfoCard />
       </div>
 
-      <div className="flex flex-col text-4xl mt-24 m-24">
+      <div className="flex flex-col text-4xl m-4 sm:m-24">
         <h3
           className={twMerge(
             cormorantRegular.className,
@@ -35,7 +35,7 @@ export const Home = (): React.JSX.Element => {
           CATEGORY
         </h3>
         <div className="w-full mt-10">
-          <div className="grid grid-cols-2">
+          <div className="grid sm:grid-cols-2">
             <CategoryCard
               onClick={() => {
                 router.push("products");
@@ -53,7 +53,7 @@ export const Home = (): React.JSX.Element => {
               title="Mother of pearl mosaic products"
             />
           </div>
-          <div className="grid grid-cols-3">
+          <div className="grid sm:grid-cols-3">
             <CategoryCard
               onClick={() => {
                 router.push("products");
@@ -106,8 +106,8 @@ export const Home = (): React.JSX.Element => {
         </div>
       </div>
 
-      <div className="h-96 m-24">
-        <div className="grid grid-cols-2 gap-16">
+      <div className="sm:h-96 m-5 sm:m-24">
+        <div className="grid sm:grid-cols-2 gap-16">
           <div className="col-span-1">
             <div className="mt-8">
               <h1 className="text-textPrimary font-island-moments text-4xl">
@@ -139,8 +139,8 @@ export const Home = (): React.JSX.Element => {
               <ButtonApp className="mt-9" title="VIEW PRODUCTS" />
             </div>
           </div>
-          <div className="col-span-1 h-96">
-            <div className="relative w-full h-full">
+          <div className="col-span-1 sm:h-96">
+            <div className="relative w-full h-96 sm:h-full">
               <Image
                 fill
                 objectFit="contain"
@@ -152,7 +152,7 @@ export const Home = (): React.JSX.Element => {
         </div>
       </div>
 
-      <div className="flex flex-col text-4xl mt-24 m-24">
+      <div className="flex flex-col text-4xl sm:m-24">
         <h3
           className={twMerge(
             cormorantRegular.className,
@@ -162,12 +162,12 @@ export const Home = (): React.JSX.Element => {
           NEW COLLECTION
         </h3>
         <div className="w-full mt-10">
-          <div className="grid grid-cols-4">
+          <div className="grid grid-cols-2 sm:grid-cols-4">
             <ProductCard
               onClick={() => {
                 router.push("products/product-detail/demo-product-1");
               }}
-              className="col-span-1 m-4"
+              className="col-span-1 sm:m-4"
               src="/images/demo_product_1.png"
               name="Olpe"
               category="Ceramic"
@@ -176,7 +176,7 @@ export const Home = (): React.JSX.Element => {
               onClick={() => {
                 router.push("products/product-detail/demo-product-1");
               }}
-              className="col-span-1 m-4"
+              className="col-span-1 sm:m-4"
               src="/images/demo_product_2.png"
               name="Olpe"
               category="Ceramic"
@@ -185,7 +185,7 @@ export const Home = (): React.JSX.Element => {
               onClick={() => {
                 router.push("products/product-detail/demo-product-1");
               }}
-              className="col-span-1 m-4"
+              className="col-span-1 sm:m-4"
               src="/images/demo_product_3.png"
               name="Olpe"
               category="Ceramic"
@@ -194,7 +194,7 @@ export const Home = (): React.JSX.Element => {
               onClick={() => {
                 router.push("products/product-detail/demo-product-1");
               }}
-              className="col-span-1 m-4"
+              className="col-span-1 sm:m-4"
               src="/images/demo_product_4.png"
               name="Olpe"
               category="Ceramic"
@@ -203,7 +203,7 @@ export const Home = (): React.JSX.Element => {
               onClick={() => {
                 router.push("products/product-detail/demo-product-1");
               }}
-              className="col-span-1 m-4"
+              className="col-span-1 sm:m-4"
               src="/images/demo_product_5.png"
               name="Olpe"
               category="Ceramic"
@@ -212,7 +212,7 @@ export const Home = (): React.JSX.Element => {
               onClick={() => {
                 router.push("products/product-detail/demo-product-1");
               }}
-              className="col-span-1 m-4"
+              className="col-span-1 sm:m-4"
               src="/images/demo_product_6.png"
               name="Olpe"
               category="Ceramic"
@@ -221,7 +221,7 @@ export const Home = (): React.JSX.Element => {
               onClick={() => {
                 router.push("products/product-detail/demo-product-1");
               }}
-              className="col-span-1 m-4"
+              className="col-span-1 sm:m-4"
               src="/images/demo_product_7.png"
               name="Olpe"
               category="Ceramic"
@@ -230,7 +230,7 @@ export const Home = (): React.JSX.Element => {
               onClick={() => {
                 router.push("products/product-detail/demo-product-1");
               }}
-              className="col-span-1 m-4"
+              className="col-span-1 sm:m-4"
               src="/images/demo_product_8.png"
               name="Olpe"
               category="Ceramic"

@@ -3,11 +3,12 @@
 @tailwind utilities;
 
 /* 
-320px: For small mobile devices (e.g., older smartphones).
-480px: For larger mobile devices (e.g., newer smartphones).
-768px: For tablets (e.g., iPads in portrait mode).
-1024px: For tablets in landscape mode and small laptops.
-1440px: For larger desktops and high-resolution screens. 
+[min] mobile
+640px: For larger mobile devices (e.g., newer smartphones). -sm
+768px: For tablets (e.g., iPads in portrait mode). -md
+1024px: For tablets in landscape mode and small laptops. -lg
+-[max]
+1440px: For larger desktops and high-resolution screens.
 */
 
 :root {

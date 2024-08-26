@@ -18,13 +18,13 @@ export const TopBanner = ({
   description,
 }: TopBannerProps): React.JSX.Element => {
   return (
-    <div className="relative w-full h-96 overflow-hidden flex items-center">
+    <div className="relative w-full h-56 sm:h-96 overflow-hidden flex items-center">
       <Image
         className=""
         alt="background"
         src={src}
-        width={1440}
-        height={1}
+        objectFit="cover"
+        fill
       />
       <div
         style={{
@@ -33,17 +33,17 @@ export const TopBanner = ({
         }}
         className="w-full h-full absolute bg-custom-gradient"
       ></div>
-      <div className="absolute ml-32">
+      <div className="absolute ml-5 sm:ml-32">
         <h1 className="text-themeWhite font-island-moments text-6xl">{h1}</h1>
         <h2
           className={twMerge(
             cormorantRegular.className,
-            "text-themeWhite text-6xl"
+            "text-themeWhite text-4xl sm:text-6xl"
           )}
         >
           {h2}
         </h2>
-        <p className={twMerge(latoRegular.className, "max-w-screen-sm mt-6 text-themeWhite")}>
+        <p className={twMerge(latoRegular.className, "max-w-screen-sm hidden sm:block mt-6 text-themeWhite")}>
           {description}
         </p>
       </div>

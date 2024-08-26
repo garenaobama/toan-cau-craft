@@ -18,7 +18,7 @@ export default function RootLayout({
           "flex min-h-screen flex-col items-center justify-between bg-themeWhite"
         )}
       >
-          <Providers >{children}</Providers>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

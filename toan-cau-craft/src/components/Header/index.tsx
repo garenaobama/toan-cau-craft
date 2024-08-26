@@ -23,8 +23,8 @@ export const Header = ({}: HeaderProp): React.JSX.Element => {
 
   return (
     <div className="relative justify-center grid grid-cols-2 h-16 bg-white items-center">
-      <div className="flex items-center justify-center">
-        <div>
+      <div className="flex items-start sm:items-center sm:justify-center">
+        <div className="ml-3 sm:ml-0">
           <Image
             src="/images/logo.svg"
             className="size-9"
@@ -33,7 +33,7 @@ export const Header = ({}: HeaderProp): React.JSX.Element => {
             alt="logo"
           />
         </div>
-        <div className="flex ml-28">
+        <div className="hidden sm:flex ml-28">
           {navLinks.map((item) => (
             <HeaderLink
               title={item.name}

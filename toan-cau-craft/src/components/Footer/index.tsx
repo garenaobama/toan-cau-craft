@@ -12,8 +12,8 @@ type FooterProp = {};
 
 export const Footer = ({}: FooterProp): React.JSX.Element => {
   return (
-    <div className="flex flex-col gap-10 border-t border-backgroundDecor200 pt-10">
-      <div className="grid grid-cols-4 gap-16">
+    <div className="flex p-5 flex-col gap-10 border-t border-backgroundDecor200 mt-10">
+      <div className="grid sm:grid-cols-4 gap-16">
         <div className="col-span-1">
           <Image
             src="/images/logo.svg"
