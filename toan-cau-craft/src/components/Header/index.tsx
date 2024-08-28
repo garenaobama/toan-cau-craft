@@ -2,13 +2,11 @@
 import { Icons } from "@/icons";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useEffect } from "react";
+import React from "react";
 import { SearchBox } from "../SearchBox";
 import { leagueSpartanRegular } from "@/fonts";
 import { usePathname } from "next/navigation";
 import { twMerge } from "tailwind-merge";
-
-type HeaderProp = {};
 
 const navLinks = [
   { id: 1, name: "HOME", path: "/", expandable: false },
@@ -17,7 +15,7 @@ const navLinks = [
   { id: 4, name: "CONTACT US", path: "/contact-us", expandable: false },
 ];
 
-export const Header = ({}: HeaderProp): React.JSX.Element => {
+export const Header = (): React.JSX.Element => {
   const pathname = usePathname();
   const isActive = (path: string) => path === pathname;
 
@@ -34,8 +32,9 @@ export const Header = ({}: HeaderProp): React.JSX.Element => {
           />
         </div>
         <div className="hidden sm:flex ml-28">
-          {navLinks.map((item) => (
+          {navLinks.map((item, index: number) => (
             <HeaderLink
+              key={index}
               title={item.name}
               isCurrent={isActive(item.path)}
               href={item.path}

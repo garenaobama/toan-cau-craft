@@ -1,8 +1,8 @@
 "use client";
+import React from "react";
 import { leagueSpartanRegular } from "@/fonts";
 import "./globals.css";
 import { twMerge } from "tailwind-merge";
-import { NextUIProvider } from "@nextui-org/react";
 import { Providers } from "./provider";
 
 export default function RootLayout({
