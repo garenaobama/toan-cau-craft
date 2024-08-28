@@ -16,7 +16,7 @@ export const columns = [
     { name: "Name", uid: "name" },
     { name: "Category", uid: "category" },
     { name: "Type", uid: "type" },
-    { name: "status", uid: "isActive" },
+    { name: "status", uid: "status" },
     { name: "ACTIONS", uid: "actions" },
   ];
   

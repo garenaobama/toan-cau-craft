@@ -17,11 +17,10 @@ interface Props {
 }
 
 export const renderCell = ({ product, columnKey }: Props) => {
-  const cellValue = product[columnKey];
 
   switch (columnKey) {
     case "category": {
-      const valueCate = cellValue as Category;
+      const valueCate = product[columnKey] as Category;
       return (
         <div className="flex flex-col">
           <p className="text-textPrimary">{valueCate.name + ""}</p>
@@ -29,7 +28,7 @@ export const renderCell = ({ product, columnKey }: Props) => {
       );
     }
     case "type": {
-        const valueType = cellValue as Type;
+        const valueType = product[columnKey]  as Type;
         return (
           <div className="flex flex-col">
             <p className="text-textPrimary">{valueType.name + ""}</p>
@@ -44,7 +43,7 @@ export const renderCell = ({ product, columnKey }: Props) => {
           size="sm"
           variant="flat"
         >
-          <p>{cellValue}</p>
+          <p>{product[columnKey]}</p>
         </Chip>
       );
     case "actions":
@@ -70,7 +69,7 @@ export const renderCell = ({ product, columnKey }: Props) => {
     default:
       return (
         <div className="flex flex-col">
-          <p className="text-textPrimary">{cellValue + ""}</p>
+          <p className="text-textPrimary">{product[columnKey] + ""}</p>
         </div>
       );
   }
