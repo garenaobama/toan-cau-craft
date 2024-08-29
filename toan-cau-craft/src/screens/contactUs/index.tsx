@@ -1,15 +1,13 @@
+import React from "react";
 import { ButtonApp } from "@/components";
 import { TopBanner } from "@/components/TopBanner";
-import { cormorantRegular, cormorantSemiBold, latoRegular } from "@/fonts";
+import { cormorantSemiBold, latoRegular } from "@/fonts";
 import { Icons } from "@/icons";
-import { cn, Input, Textarea } from "@nextui-org/react";
+import { Input, Textarea } from "@nextui-org/react";
 import Image from "next/image";
 import { twMerge } from "tailwind-merge";
 
 export const ContactUs = (): React.JSX.Element => {
-  const classInput = {
-    label: cn("", latoRegular.className),
-  };
   return (
     <div>
       <TopBanner

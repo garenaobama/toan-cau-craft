@@ -6,7 +6,13 @@ export type Product = {
     name:string,
     category: Category
     type: Type
+    timestamp: TimeStamp
     status: Status
+}
+
+type TimeStamp = {
+    updateAt: string,
+    deleteAt: string
 }
 
 export type Status = "active" | "pause"

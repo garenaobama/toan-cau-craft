@@ -12,7 +12,7 @@ type HeaderProp = {
 
 const navLinks = [
   { id: 1, name: "Cài đặt chung", path: "/admin", expandable: false },
-  { id: 2, name: "Sản phẩm", path: "/admin/admin-products", expandable: true },
+  { id: 2, name: "Sản phẩm", path: "/admin/products", expandable: true },
   {
     id: 3,
     name: "Chủng loại",
@@ -28,12 +28,12 @@ export const AdminHeader = ({ className }: HeaderProp): React.JSX.Element => {
   return (
     <div
       className={twMerge(
-        "relative justify-center items-center h-full",
+        "relative justify-center items-center h-full rounded-lg",
         className
       )}
     >
-      <div className="flex flex-col items-start bg-secondary-50 h-full">
-        <div className="flex gap-2 p-3 bg-primary-200">
+      <div className="flex flex-col items-start bg-secondary-50 h-full rounded-lg">
+        <div className="flex gap-2 p-3 bg-primary-200 rounded-xl">
           <Image
             src="/images/logo.svg"
             className="size-9"

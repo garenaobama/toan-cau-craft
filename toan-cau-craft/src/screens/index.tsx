@@ -7,3 +7,4 @@ export * from './productDetail'
 //admin
 export * from './admin'
 export * from './adminProducts'
+export * from './adminProductAddNew'
