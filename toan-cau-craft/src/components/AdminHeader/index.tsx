@@ -15,8 +15,14 @@ const navLinks = [
   { id: 2, name: "Sản phẩm", path: "/admin/products", expandable: true },
   {
     id: 3,
-    name: "Chủng loại",
-    path: "/admin-category-type",
+    name: "Phân loại 1 (Category)",
+    path: "/admin/category",
+    expandable: false,
+  },
+  {
+    id: 4,
+    name: "Phân loại 2 (Type)",
+    path: "/admin/type",
     expandable: false,
   },
 ];

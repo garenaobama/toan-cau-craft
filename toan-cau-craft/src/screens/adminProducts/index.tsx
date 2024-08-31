@@ -14,8 +14,7 @@ import {
 import React, { useEffect, useState } from "react";
 import { twMerge } from "tailwind-merge";
 import { renderCell } from "./RenderCell";
-import { columns, Product } from "@/models/Product";
-import { API_ENDPOINT } from "@/utils/Constants";
+import { columns, fetchProducts, Product } from "@/models/Product";
 import { Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 
@@ -23,13 +22,11 @@ export const AdminProducts = (): React.JSX.Element => {
   const router = useRouter()
   const [products, setProducts] = useState<Product[]>([]);
   useEffect(() => {
-    fetchProducts();
-    console.log(API_ENDPOINT + "/products");
+    fetchInitProducts();
   }, []);
 
-  const fetchProducts = async () => {
-    const data = await fetch(API_ENDPOINT + "/products");
-    const products = await data.json();
+  const fetchInitProducts = async () => {
+    const products = await fetchProducts();
     setProducts(products);
   };
 

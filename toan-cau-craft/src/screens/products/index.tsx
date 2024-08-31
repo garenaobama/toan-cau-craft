@@ -1,9 +1,8 @@
 "use client";
+import React from "react";
 import { ProductCard } from "@/components/ProductCard";
-import { SearchBox } from "@/components/SearchBox";
 import { TopBanner } from "@/components/TopBanner";
-import { cormorantSemiBold, latoRegular } from "@/fonts";
-import { Checkbox } from "@nextui-org/react";
+import { cormorantSemiBold} from "@/fonts";
 import { twMerge } from "tailwind-merge";
 import { FilterBox } from "./FilterBox";
 import PaginationApp from "@/components/PaginationApp";

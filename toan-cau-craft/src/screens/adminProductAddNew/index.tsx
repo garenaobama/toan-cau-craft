@@ -1,7 +1,5 @@
 "use client";
 import React from "react";
-import { Product } from "@/models/Product";
-import { API_ENDPOINT } from "@/utils/Constants";
 import {
   BreadcrumbItem,
   Breadcrumbs,
@@ -10,7 +8,6 @@ import {
   Select,
   SelectItem,
   Textarea,
-  useDisclosure,
 } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import { latoRegular } from "@/fonts";
@@ -18,8 +15,9 @@ import * as Yup from "yup";
 import { twMerge } from "tailwind-merge";
 import { Field, FieldProps, Form, Formik, FormikHelpers } from "formik";
 import slugify from "slugify";
-import { Category } from "@/models/Category";
-import { Type } from "@/models/Type";
+import { Category, fetchCategories } from "@/models/Category";
+import { fetchTypes, Type } from "@/models/Type";
+import { addProducts } from "@/models/Product";
 
 export type AddProductInput = {
   name: string;
@@ -56,39 +54,28 @@ export const AdminProductAddNew = (): React.JSX.Element => {
   });
 
   const fetchData = async () => {
-    const cates = await fetch(API_ENDPOINT + "/categories");
-    const types = await fetch(API_ENDPOINT + "/types");
-    const cates_data = await cates.json();
-    const types_data = await types.json();
-    setCategories(cates_data);
-    setTypes(types_data);
+    const cates = await fetchCategories();
+    const types = await fetchTypes();
+
+    setCategories(cates);
+    setTypes(types);
   };
 
   const onSubmit = async (
     values: AddProductInput,
-    { setSubmitting, setFieldError, resetForm }: FormikHelpers<AddProductInput>
+    { setSubmitting }: FormikHelpers<AddProductInput>
   ) => {
-    try {
-      await fetch(API_ENDPOINT+"/products", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          id:"23",
-          name: values.name,
-          description: values.description,
-          category: values.category,
-          type: values.type,
-          slug: slugify(values.name),
-        }),
-      });
-    } catch (error) {
-      console.error("Error adding lesson:", error);
-      alert("An error occurred while adding the lesson");
-    } finally {
+    addProducts({
+      product:{
+        name: values.name,
+        description: values.description,
+        // category: values.category ?? "",
+        // type: values.type ?? "",
+        slug: slugify(values.name),
+      }
+    })
       setSubmitting(false);
-    }
+    
   };
 
   return (
@@ -121,7 +108,7 @@ export const AdminProductAddNew = (): React.JSX.Element => {
           validationSchema={AddProductSchema}
           onSubmit={onSubmit}
         >
-          {({ errors, touched, isSubmitting }) => (
+          {({ errors, touched }) => (
             <Form>
               <Field name="name">
                 {({ field }: FieldProps) => (
