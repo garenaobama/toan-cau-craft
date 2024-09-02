@@ -14,9 +14,11 @@ const statusColorMap: { [key: string]: string } = {
 interface Props {
   product: Product;
   columnKey: string | React.Key;
+  onViewDetail?: (slug:string) => void
+  onGoUpdate : (slug:string) => void
 }
 
-export const renderCell = ({ product, columnKey }: Props) => {
+export const renderCell = ({ product, columnKey, onViewDetail, onGoUpdate }: Props) => {
 
   switch (columnKey) {
     case "category": {
@@ -55,7 +57,7 @@ export const renderCell = ({ product, columnKey }: Props) => {
             </span>
           </Tooltip>
           <Tooltip color="success" content="Chỉnh sửa sản phẩm">
-            <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
+            <span onClick={() => onGoUpdate(product.slug)} className="text-lg text-default-400 cursor-pointer active:opacity-50">
               <Edit color="green" />
             </span>
           </Tooltip>

@@ -8,6 +8,7 @@ import {
   Select,
   SelectItem,
   Textarea,
+  useDisclosure,
 } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import { latoRegular } from "@/fonts";
@@ -18,6 +19,12 @@ import slugify from "slugify";
 import { Category, fetchCategories } from "@/models/Category";
 import { fetchTypes, Type } from "@/models/Type";
 import { addProducts } from "@/models/Product";
+import { AddingImageButton, ExportDataImage } from "./AddingImageButton";
+import { PlusCircle } from "lucide-react";
+import ModalCommon from "@/components/Modals/ModalCommon";
+import Lottie from "react-lottie";
+import { LottieApp } from "@/utils/lotties";
+import { useCloudStorage } from "@/hooks/useCloudStorage";
 
 export type AddProductInput = {
   name: string;
@@ -25,6 +32,7 @@ export type AddProductInput = {
   category?: string;
   type?: string;
   slug?: string;
+  status?: string
 };
 
 const statusObject = [
@@ -39,8 +47,15 @@ const statusObject = [
 ];
 
 export const AdminProductAddNew = (): React.JSX.Element => {
+  const { handleUploadImage } = useCloudStorage();
+
   const [categories, setCategories] = useState<Category[]>([]);
   const [types, setTypes] = useState<Type[]>([]);
+  const [images, setImages] = useState<ExportDataImage[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isSuccess, setIsSuccess] = useState<boolean>(true);
+  const [responseMessage, setResponseMessage] = useState<string>();
+  const responseModal = useDisclosure();
 
   useEffect(() => {
     fetchData();
@@ -51,6 +66,7 @@ export const AdminProductAddNew = (): React.JSX.Element => {
     description: Yup.string().required("* Bạn cần điền thông tin này"),
     category: Yup.string().required("* Bạn cần điền thông tin này"),
     type: Yup.string().required("* Bạn cần điền thông tin này"),
+    status: Yup.string().required("* Bạn cần điền thông tin này"),
   });
 
   const fetchData = async () => {
@@ -65,17 +81,59 @@ export const AdminProductAddNew = (): React.JSX.Element => {
     values: AddProductInput,
     { setSubmitting }: FormikHelpers<AddProductInput>
   ) => {
-    addProducts({
-      product:{
+    responseModal.onOpen();
+    setIsLoading(true);
+    setResponseMessage("Đang tải ảnh lên bộ nhớ đám mây");
+    const imagesUpload = await handleUploadImage({ images: images });
+
+    setResponseMessage("Đang cập nhật dữ liệu mới");
+    await addProducts({
+      product: {
         name: values.name,
         description: values.description,
-        // category: values.category ?? "",
-        // type: values.type ?? "",
-        slug: slugify(values.name),
+        category: values.category ?? "",
+        type: values.type ?? "",
+        slug: slugify(values.name, {
+          lower: true,
+        }),
+        updateAt: new Date().toISOString(),
+        createAt: new Date().toISOString(),
+        status: "active",
+        images: imagesUpload,
+      },
+    }).then((data) => {
+      if (data.data) {
+        setIsLoading(false);
+        setIsSuccess(true);
+        setResponseMessage("Thêm mới thành công");
+        setTimeout(() => {
+          responseModal.onClose();
+        }, 2000);
+      } else if (data.error) {
+        setResponseMessage("Có lỗi xảy ra: \n" + data.error);
       }
-    })
-      setSubmitting(false);
-    
+    });
+    setSubmitting(false);
+  };
+
+  const onImagesUploadPreview = (
+    { image, name, color }: ExportDataImage,
+    index: number
+  ) => {
+    setImages((prevImages) => {
+      const updatedImages = [...prevImages];
+      updatedImages[index] = { ...updatedImages[index], image, color, name };
+      return updatedImages;
+    });
+  };
+
+  const resetState = () => {
+    setIsLoading(false);
+    setResponseMessage("Vui lòng đợi...");
+  };
+
+  const onDeleteImageField = (index: number) => {
+    setImages((prevImages) => prevImages.filter((_, i) => i !== index));
   };
 
   return (
@@ -98,12 +156,21 @@ export const AdminProductAddNew = (): React.JSX.Element => {
       </div>
 
       <div className="mt-5">
+        <h2
+          className={twMerge(
+            "text-textPrimary text-xl my-3",
+            latoRegular.className
+          )}
+        >
+          I. Thông tin cơ bản
+        </h2>
         <Formik
           initialValues={{
             name: "",
             description: "",
             category: "",
             type: "",
+            status: "active"
           }}
           validationSchema={AddProductSchema}
           onSubmit={onSubmit}
@@ -232,13 +299,13 @@ export const AdminProductAddNew = (): React.JSX.Element => {
                       base: "bg-black flex gap-5",
                       description: "text-textTertiary",
                     }}
-                    name="type"
+                    name="status"
                     className="mt-5 text-xl text-textPrimary"
                     label="Trạng thái (Nếu chọn pause, sản phẩm sẽ chưa hiển thị trên trang khách hàng cho đến khi bạn thay đổi trạng thái của sản phẩm này)"
-                    isInvalid={!!errors.type && touched.type}
+                    isInvalid={!!errors.status && touched.status}
                     variant="faded"
                     errorMessage={
-                      errors.type && touched.type ? errors.type : null
+                      errors.status && touched.status ? errors.status : null
                     }
                     renderValue={(items) => {
                       return items.map((item) => (
@@ -256,6 +323,44 @@ export const AdminProductAddNew = (): React.JSX.Element => {
                 )}
               </Field>
 
+              <div className="mt-5">
+                <h2
+                  className={twMerge(
+                    "text-textPrimary text-xl my-3",
+                    latoRegular.className
+                  )}
+                >
+                  II. Hình ảnh sản phẩm
+                </h2>
+                {images.map((item, index) => (
+                  <div key={index} className="my-2">
+                    <AddingImageButton
+                      onDelete={() => onDeleteImageField(index)}
+                      onImagesUploadPreview={({ image, color }) =>
+                        onImagesUploadPreview({ image, color }, index)
+                      }
+                      key={index}
+                    />
+                  </div>
+                ))}
+
+                <Button
+                  className="my-3"
+                  onClick={() =>
+                    setImages([
+                      ...images,
+                      {
+                        image: undefined,
+                        color: "",
+                      },
+                    ])
+                  }
+                >
+                  <p>Add images</p>
+                  <PlusCircle color="green"></PlusCircle>
+                </Button>
+              </div>
+
               <div className="flex flex-row gap-5 mt-5">
                 <Button type="submit" color="primary">
                   Tiếp tục
@@ -265,6 +370,53 @@ export const AdminProductAddNew = (): React.JSX.Element => {
           )}
         </Formik>
       </div>
+
+      <ModalCommon onCloseModal={resetState} disclosure={responseModal}>
+        <p className="text-textPrimary text-xl my-5">{responseMessage}</p>
+        {isLoading ? (
+          <Lottie
+            style={{ width: 100, height: 100 }}
+            options={{
+              loop: true,
+              autoplay: true,
+              animationData: LottieApp.Loading,
+              rendererSettings: {
+                preserveAspectRatio: "xMidYMid slice",
+              },
+            }}
+            isClickToPauseDisabled={true}
+            width={"100%"}
+          />
+        ) : isSuccess ? (
+          <Lottie
+            style={{ width: 100, height: 100 }}
+            options={{
+              loop: true,
+              autoplay: true,
+              animationData: LottieApp.Success,
+              rendererSettings: {
+                preserveAspectRatio: "xMidYMid slice",
+              },
+            }}
+            isClickToPauseDisabled={true}
+            width={"100%"}
+          />
+        ) : (
+          <Lottie
+            style={{ width: 100, height: 100 }}
+            options={{
+              loop: true,
+              autoplay: true,
+              animationData: LottieApp.Error,
+              rendererSettings: {
+                preserveAspectRatio: "xMidYMid slice",
+              },
+            }}
+            isClickToPauseDisabled={true}
+            width={"100%"}
+          />
+        )}
+      </ModalCommon>
     </div>
   );
 };

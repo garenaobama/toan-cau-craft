@@ -70,6 +70,7 @@ export const AdminProducts = (): React.JSX.Element => {
                   {renderCell({
                     product: item,
                     columnKey: columnKey,
+                    onGoUpdate: (slug) => {router.push('/admin/products/update/'+slug)}
                   })}
                 </TableCell>
               )}
