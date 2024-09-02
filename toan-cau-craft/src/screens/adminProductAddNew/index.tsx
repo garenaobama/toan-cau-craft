@@ -18,14 +18,14 @@ import { Field, FieldProps, Form, Formik, FormikHelpers } from "formik";
 import slugify from "slugify";
 import { Category, fetchCategories } from "@/models/Category";
 import { fetchTypes, Type } from "@/models/Type";
-import { addProducts } from "@/models/Product";
+import { addProducts, Specification } from "@/models/Product";
 import { AddingImageButton, ExportDataImage } from "./AddingImageButton";
 import { PlusCircle } from "lucide-react";
 import ModalCommon from "@/components/Modals/ModalCommon";
 import Lottie from "react-lottie";
 import { LottieApp } from "@/utils/lotties";
 import { handleUploadImage } from "@/utils/CloudStorage";
-import { statusObject } from "@/utils/constants";
+import { asyncState, inputSlots, statusObject } from "@/utils/constants";
 
 export type AddProductInput = {
   name: string;
@@ -33,7 +33,8 @@ export type AddProductInput = {
   category?: string;
   type?: string;
   slug?: string;
-  status?: string
+  status?: string;
+  specification?: Specification;
 };
 
 export const AdminProductAddNew = (): React.JSX.Element => {
@@ -42,9 +43,9 @@ export const AdminProductAddNew = (): React.JSX.Element => {
   const [categories, setCategories] = useState<Category[]>([]);
   const [types, setTypes] = useState<Type[]>([]);
   const [images, setImages] = useState<ExportDataImage[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [isSuccess, setIsSuccess] = useState<boolean>(true);
+  const [state, setState] = useState<string>(asyncState.loading);
   const [responseMessage, setResponseMessage] = useState<string>();
+  const [spec, setSpec] = useState<Specification>();
 
   useEffect(() => {
     fetchData();
@@ -71,7 +72,7 @@ export const AdminProductAddNew = (): React.JSX.Element => {
     { setSubmitting }: FormikHelpers<AddProductInput>
   ) => {
     responseModal.onOpen();
-    setIsLoading(true);
+    setState(asyncState.loading);
     setResponseMessage("Đang tải ảnh lên bộ nhớ đám mây");
     const imagesUpload = await handleUploadImage({ images: images });
 
@@ -85,6 +86,7 @@ export const AdminProductAddNew = (): React.JSX.Element => {
         slug: slugify(values.name, {
           lower: true,
         }),
+        specification: spec,
         updateAt: new Date().toISOString(),
         createAt: new Date().toISOString(),
         status: "active",
@@ -92,14 +94,14 @@ export const AdminProductAddNew = (): React.JSX.Element => {
       },
     }).then((data) => {
       if (data.data) {
-        setIsLoading(false);
-        setIsSuccess(true);
+        setState(asyncState.success);
         setResponseMessage("Thêm mới thành công");
         setTimeout(() => {
           responseModal.onClose();
         }, 2000);
       } else if (data.error) {
         setResponseMessage("Có lỗi xảy ra: \n" + data.error);
+        setState(asyncState.error);
       }
     });
     setSubmitting(false);
@@ -117,7 +119,7 @@ export const AdminProductAddNew = (): React.JSX.Element => {
   };
 
   const resetState = () => {
-    setIsLoading(false);
+    setState(asyncState.loading);
     setResponseMessage("Vui lòng đợi...");
   };
 
@@ -159,7 +161,7 @@ export const AdminProductAddNew = (): React.JSX.Element => {
             description: "",
             category: "",
             type: "",
-            status: "active"
+            status: "active",
           }}
           validationSchema={AddProductSchema}
           onSubmit={onSubmit}
@@ -170,12 +172,7 @@ export const AdminProductAddNew = (): React.JSX.Element => {
                 {({ field }: FieldProps) => (
                   <Input
                     {...field}
-                    classNames={{
-                      label: "text-textSecondary mb-3",
-                      base: "bg-black flex gap-5",
-                      input: "placeholder:text-textTertiary text-xl",
-                      description: "text-textTertiary",
-                    }}
+                    classNames={inputSlots}
                     className="text-textPrimary"
                     name="name"
                     size="lg"
@@ -193,12 +190,7 @@ export const AdminProductAddNew = (): React.JSX.Element => {
                 {({ field }: FieldProps) => (
                   <Textarea
                     {...field}
-                    classNames={{
-                      label: "text-textSecondary mb-3",
-                      base: "bg-black flex gap-5",
-                      input: "placeholder:text-textTertiary text-xl",
-                      description: "text-textTertiary",
-                    }}
+                    classNames={inputSlots}
                     name="description"
                     className="mt-5 text-xl text-textPrimary"
                     label="Mô tả cho sản phẩm"
@@ -217,11 +209,7 @@ export const AdminProductAddNew = (): React.JSX.Element => {
                 {({ field }: FieldProps) => (
                   <Select
                     {...field}
-                    classNames={{
-                      label: "text-textSecondary mb-3",
-                      base: "bg-black flex gap-5",
-                      description: "text-textTertiary",
-                    }}
+                    classNames={inputSlots}
                     name="category"
                     className="mt-5 text-xl text-textPrimary"
                     label="Category/Phân loại 1"
@@ -250,11 +238,7 @@ export const AdminProductAddNew = (): React.JSX.Element => {
                 {({ field }: FieldProps) => (
                   <Select
                     {...field}
-                    classNames={{
-                      label: "text-textSecondary mb-3",
-                      base: "bg-black flex gap-5",
-                      description: "text-textTertiary",
-                    }}
+                    classNames={inputSlots}
                     name="type"
                     className="mt-5 text-xl text-textPrimary"
                     label="Type/Phân loại 2"
@@ -319,7 +303,70 @@ export const AdminProductAddNew = (): React.JSX.Element => {
                     latoRegular.className
                   )}
                 >
-                  II. Hình ảnh sản phẩm
+                  II. Thông tin chi tiết
+                </h2>
+                <Input
+                    classNames={inputSlots}
+                    className="text-textPrimary my-2"
+                    name="name"
+                    size="lg"
+                    value={spec?.sku}
+                    onChange={(e) => setSpec({
+                      ...spec,
+                      sku: e.target.value
+                    })}
+                    label="SKU (Mã sản phẩm)"
+                    variant="faded"
+                  />
+                  <Input
+                    classNames={inputSlots}
+                    className="text-textPrimary my-2"
+                    name="name"
+                    size="lg"
+                    value={spec?.tags}
+                    onChange={(e) => setSpec({
+                      ...spec,
+                      tags: e.target.value
+                    })}
+                    label="Tags"
+                    variant="faded"
+                  />
+                  <Input
+                    classNames={inputSlots}
+                    className="text-textPrimary my-2"
+                    name="name"
+                    value={spec?.dimensions}
+                    onChange={(e) => setSpec({
+                      ...spec,
+                      dimensions: e.target.value
+                    })}
+                    size="lg"
+                    label="Kích thước"
+                    variant="faded"
+                  />
+                  <Input
+                    classNames={inputSlots}
+                    className="text-textPrimary my-2"
+                    name="name"
+                    value={spec?.materials}
+                    onChange={(e) => setSpec({
+                      ...spec,
+                      materials: e.target.value
+                    })}
+                    size="lg"
+                    label="Chất liệu"
+                    variant="faded"
+                  />
+              </div>
+
+              <div className="mt-5">
+                <h2
+                  className={twMerge(
+                    "text-textPrimary text-xl my-3",
+                    latoRegular.className
+                  )}
+                >
+                  III. Hình ảnh sản phẩm
                 </h2>
                 {images.map((item, index) => (
                   <div key={index} className="my-2">
@@ -361,8 +408,10 @@ export const AdminProductAddNew = (): React.JSX.Element => {
       </div>
 
       <ModalCommon onCloseModal={resetState} disclosure={responseModal}>
-        <p className="text-textPrimary text-xl my-5">{responseMessage}</p>
-        {isLoading ? (
+        <p className="text-textPrimary text-xl my-5 text-center">
+          {responseMessage}
+        </p>
+        {state === asyncState.loading ? (
           <Lottie
             style={{ width: 100, height: 100 }}
             options={{
@@ -376,7 +425,7 @@ export const AdminProductAddNew = (): React.JSX.Element => {
             isClickToPauseDisabled={true}
             width={"100%"}
           />
-        ) : isSuccess ? (
+        ) : state === asyncState.success ? (
           <Lottie
             style={{ width: 100, height: 100 }}
             options={{
@@ -409,3 +458,4 @@ export const AdminProductAddNew = (): React.JSX.Element => {
     </div>
   );
 };
+

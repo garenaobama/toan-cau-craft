@@ -75,11 +75,11 @@ const ModalConfirm = forwardRef<ModalConfirmRef, CommonModalProps>(
               <div className="flex flex-col items-center">
                 {variant !== undefined && (
                   <div className="flex flex-col justify-center items-center">
-                    <p className="text-textPrimary text-xl my-5">
+                    <p className="text-textPrimary text-xl my-5 text-center">
                       {VariantMessage[variant][0]}
                     </p>
                     <br />
-                    <p className="text-textSecondary">
+                    <p className="text-textSecondary text-center">
                       {VariantMessage[variant][1]}
                     </p>
                   </div>

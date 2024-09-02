@@ -12,11 +12,19 @@ export type Product = {
     category?: Category
     slug?: string
     description?: string
+    specification?: Specification
     type?: Type
     status?: Status
     images?: ImageProduct[]
     updateAt?: string,
     createAt?: string
+}
+
+export type Specification = {
+  sku?: string,
+  tags?: string,
+  dimensions?: string,
+  materials?: string
 }
 
 export type ProductImport = {
@@ -26,6 +34,7 @@ export type ProductImport = {
     slug?: string
     description?: string
     type?: string
+    specification?: Specification
     status?: Status
     images?: ImageProduct[]
     updateAt?: string,
@@ -59,21 +68,30 @@ export const columns = [
 
   export const addProducts = async ({ product }: AddProductProps) => {
     try {
-      // Create a reference to the category document
+      // Check for duplicate product name
+      const productsRef = collection(firestore, "products");
+      const querySnapshot = await getDocs(query(productsRef, where("name", "==", product.name)));
+      
+      if (!querySnapshot.empty) {
+        throw new Error("Đã có một sản phẩm dùng tên này rồi (Không được trùng tên)");
+      }
+  
+      // Create references to the category and type documents
       const categoryRef: DocumentReference = doc(firestore, "categories", product.category ?? "");
-        // Create a reference to the category document
       const typeRef: DocumentReference = doc(firestore, "types", product.type ?? "");
   
-      // Include the category reference in the product data
+      // Include the category and type references in the product data
       const productWithCategoryRef = {
         ...product,
         category: categoryRef,
         type: typeRef
       };
   
+      // Add the new product to Firestore
       const docRef = await addDoc(collection(firestore, "products"), productWithCategoryRef);
       return { success: true, data: docRef };
     } catch (e) {
+      console.error("Error adding product: ", e);
       return { success: false, error: e };
     }
   };

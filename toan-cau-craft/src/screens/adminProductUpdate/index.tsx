@@ -21,6 +21,7 @@ import { fetchTypes, Type } from "@/models/Type";
 import {
   fetchProductBySlug,
   Product,
+  Specification,
   updateProduct,
   updateProductImage,
 } from "@/models/Product";
@@ -36,7 +37,7 @@ import ModalConfirm, {
   ModalConfirmRef,
 } from "@/components/Modals/ModalConfirm";
 import { deleteImage, uploadImage } from "@/utils/CloudStorage";
-import { asyncState, statusObject } from "@/utils/constants";
+import { asyncState, inputSlots, statusObject } from "@/utils/constants";
 
 export type AddProductInput = {
   name: string;
@@ -58,6 +59,7 @@ export const AdminProductUpdate = ({
   const [categories, setCategories] = useState<Category[]>([]);
   const [types, setTypes] = useState<Type[]>([]);
   const [images, setImages] = useState<ExportDataImage[]>([]);
+  const [spec, setSpec] = useState<Specification>();
   const [state, setState] = useState<string>(asyncState.loading);
   const [responseMessage, setResponseMessage] = useState<string>();
   const [variant, setVariant] = useState<number>(0);
@@ -81,6 +83,7 @@ export const AdminProductUpdate = ({
     const types = await fetchTypes();
 
     setProduct(product_f);
+    setSpec(product_f?.specification);
     setCategories(cates);
     setTypes(types);
   };
@@ -99,6 +102,7 @@ export const AdminProductUpdate = ({
         description: values.description,
         category: values.category ?? "",
         type: values.type ?? "",
+        specification: spec,
         slug: slugify(values.name, {
           lower: true,
         }),
@@ -154,7 +158,7 @@ export const AdminProductUpdate = ({
         color: color,
         image: image,
       });
-  
+
       if (updatedImages) {
         updatedImages[index] = {
           ...updatedImages[index],
@@ -288,12 +292,7 @@ export const AdminProductUpdate = ({
             {({ errors, touched }) => (
               <Form>
                 <Input
-                  classNames={{
-                    label: "text-textSecondary mb-3",
-                    base: "bg-black flex gap-5",
-                    input: "placeholder:text-textTertiary text-xl",
-                    description: "text-textTertiary",
-                  }}
+                  classNames={inputSlots}
                   value={product?.id}
                   disabled
                   className="text-textPrimary mb-3"
@@ -307,12 +306,7 @@ export const AdminProductUpdate = ({
                   {({ field }: FieldProps) => (
                     <Input
                       {...field}
-                      classNames={{
-                        label: "text-textSecondary mb-3",
-                        base: "bg-black flex gap-5",
-                        input: "placeholder:text-textTertiary text-xl",
-                        description: "text-textTertiary",
-                      }}
+                      classNames={inputSlots}
                       className="text-textPrimary"
                       name="name"
                       size="lg"
@@ -330,12 +324,7 @@ export const AdminProductUpdate = ({
                   {({ field }: FieldProps) => (
                     <Textarea
                       {...field}
-                      classNames={{
-                        label: "text-textSecondary mb-3",
-                        base: "bg-black flex gap-5",
-                        input: "placeholder:text-textTertiary text-xl",
-                        description: "text-textTertiary",
-                      }}
+                      classNames={inputSlots}
                       name="description"
                       className="mt-5 text-xl text-textPrimary"
                       label="Mô tả cho sản phẩm"
@@ -354,11 +343,7 @@ export const AdminProductUpdate = ({
                   {({ field }: FieldProps) => (
                     <Select
                       {...field}
-                      classNames={{
-                        label: "text-textSecondary mb-3",
-                        base: "bg-black flex gap-5",
-                        description: "text-textTertiary",
-                      }}
+                      classNames={inputSlots}
                       name="category"
                       className="mt-5 text-xl text-textPrimary"
                       label="Category/Phân loại 1"
@@ -392,11 +377,7 @@ export const AdminProductUpdate = ({
                   {({ field }: FieldProps) => (
                     <Select
                       {...field}
-                      classNames={{
-                        label: "text-textSecondary mb-3",
-                        base: "bg-black flex gap-5",
-                        description: "text-textTertiary",
-                      }}
+                      classNames={inputSlots}
                       name="type"
                       className="mt-5 text-xl text-textPrimary"
                       label="Type/Phân loại 2"
@@ -430,11 +411,7 @@ export const AdminProductUpdate = ({
                       {...field}
                       items={statusObject}
                       defaultSelectedKeys={["active"]}
-                      classNames={{
-                        label: "text-textSecondary mb-3",
-                        base: "bg-black flex gap-5",
-                        description: "text-textTertiary",
-                      }}
+                      classNames={inputSlots}
                       name="type"
                       className="mt-5 text-xl text-textPrimary"
                       label="Trạng thái (Nếu chọn pause, sản phẩm sẽ chưa hiển thị trên trang khách hàng cho đến khi bạn thay đổi trạng thái của sản phẩm này)"
@@ -459,6 +436,77 @@ export const AdminProductUpdate = ({
                   )}
                 </Field>
 
+                <div className="mt-5">
+                  <h2
+                    className={twMerge(
+                      "text-textPrimary text-xl my-3",
+                      latoRegular.className
+                    )}
+                  >
+                    II. Thông tin chi tiết
+                  </h2>
+                  <Input
+                    classNames={inputSlots}
+                    className="text-textPrimary my-2"
+                    name="name"
+                    size="lg"
+                    value={spec?.sku}
+                    onChange={(e) =>
+                      setSpec({
+                        ...spec,
+                        sku: e.target.value,
+                      })
+                    }
+                    label="SKU (Mã sản phẩm)"
+                    variant="faded"
+                  />
+                  <Input
+                    classNames={inputSlots}
+                    className="text-textPrimary my-2"
+                    name="name"
+                    size="lg"
+                    value={spec?.tags}
+                    onChange={(e) =>
+                      setSpec({
+                        ...spec,
+                        tags: e.target.value,
+                      })
+                    }
+                    label="Tags"
+                    variant="faded"
+                  />
+                  <Input
+                    classNames={inputSlots}
+                    className="text-textPrimary my-2"
+                    name="name"
+                    value={spec?.dimensions}
+                    onChange={(e) =>
+                      setSpec({
+                        ...spec,
+                        dimensions: e.target.value,
+                      })
+                    }
+                    size="lg"
+                    label="Kích thước"
+                    variant="faded"
+                  />
+                  <Input
+                    classNames={inputSlots}
+                    className="text-textPrimary my-2"
+                    name="name"
+                    value={spec?.materials}
+                    onChange={(e) =>
+                      setSpec({
+                        ...spec,
+                        materials: e.target.value,
+                      })
+                    }
+                    size="lg"
+                    label="Chất liệu"
+                    variant="faded"
+                  />
+                </div>
+
                 <div className="flex flex-row gap-5 mt-5">
                   <Button type="submit" color="primary">
                     <Save color="white" size={15} />
@@ -479,7 +527,7 @@ export const AdminProductUpdate = ({
               latoRegular.className
             )}
           >
-            II. Hình ảnh sản phẩm
+            III. Hình ảnh sản phẩm
           </h2>
           {product?.images?.map((item, index) => (
             <div key={index} className="my-2">
