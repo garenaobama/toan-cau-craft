@@ -1,7 +1,8 @@
 import { firestore } from "@/utils/FireBase"
 import { Category } from "./Category"
 import { Type } from "./Type"
-import { addDoc, collection, doc, DocumentReference, getDoc, getDocs, query, updateDoc, where } from "firebase/firestore"
+import { addDoc, collection, deleteDoc, doc, DocumentReference, getDoc, getDocs, query, updateDoc, where } from "firebase/firestore"
+import { deleteImage } from "@/utils/CloudStorage"
 
 const COLLECTION_ID = "products"
 
@@ -166,5 +167,32 @@ export const fetchProducts = async (): Promise<Product[]> => {
     } catch (error) {
       console.error("Error fetching product by slug: ", error);
       throw new Error("Failed to fetch product by slug");
+    }
+  };
+
+  export const deleteProduct = async (productId: string): Promise<void> => {
+    try {
+      // Fetch the product document
+      const productDoc = await getDoc(doc(firestore, COLLECTION_ID, productId));
+      if (!productDoc.exists()) {
+        throw new Error("Product not found");
+      }
+  
+      const productData = productDoc.data() as Product;
+  
+      // Delete associated images
+      if (productData.images && productData.images.length > 0) {
+        await Promise.all(productData.images.map(async (item) => {
+          await deleteImage(item.url); // Assuming you have this function
+        }));
+      }
+  
+      // Delete the product document
+      await deleteDoc(doc(firestore, COLLECTION_ID, productId));
+  
+      console.log(`Product with ID ${productId} deleted successfully`);
+    } catch (error) {
+      console.error("Error deleting product: ", error);
+      throw new Error("Failed to delete product");
     }
   };

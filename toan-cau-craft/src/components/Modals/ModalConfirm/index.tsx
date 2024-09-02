@@ -22,6 +22,10 @@ const VariantMessage = [
     "Thêm hình ảnh mới ?",
     "Hãy đảm bảo dung lượng của ảnh không quá lớn",
   ],
+  [
+    "Xoá sản phẩm ?",
+    "Sản phẩm cùng mọi hình ảnh liên quan sẽ bị xoá VĨNH VIỄN",
+  ],
 ];
 
 export type CommonModalProps = {

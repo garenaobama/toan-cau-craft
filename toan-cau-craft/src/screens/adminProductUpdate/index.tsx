@@ -28,7 +28,6 @@ import { PlusCircle, Save } from "lucide-react";
 import ModalCommon from "@/components/Modals/ModalCommon";
 import Lottie from "react-lottie";
 import { LottieApp } from "@/utils/lotties";
-import { useCloudStorage } from "@/hooks/useCloudStorage";
 import {
   AddingImageButton,
   ExportDataImage,
@@ -36,6 +35,8 @@ import {
 import ModalConfirm, {
   ModalConfirmRef,
 } from "@/components/Modals/ModalConfirm";
+import { deleteImage, uploadImage } from "@/utils/CloudStorage";
+import { asyncState, statusObject } from "@/utils/constants";
 
 export type AddProductInput = {
   name: string;
@@ -45,29 +46,11 @@ export type AddProductInput = {
   slug?: string;
 };
 
-const statusObject = [
-  {
-    key: "active",
-    color: "success",
-  },
-  {
-    key: "pause",
-    color: "danger",
-  },
-];
-
-const asyncState = {
-  loading: "loading",
-  success: "success",
-  error: "error",
-};
-
 export const AdminProductUpdate = ({
   slug,
 }: {
   slug: string;
 }): React.JSX.Element => {
-  const { uploadImage, deleteImage } = useCloudStorage();
   const responseModal = useDisclosure();
   const confirmModal = useDisclosure();
 
@@ -75,9 +58,7 @@ export const AdminProductUpdate = ({
   const [categories, setCategories] = useState<Category[]>([]);
   const [types, setTypes] = useState<Type[]>([]);
   const [images, setImages] = useState<ExportDataImage[]>([]);
-
   const [state, setState] = useState<string>(asyncState.loading);
-
   const [responseMessage, setResponseMessage] = useState<string>();
   const [variant, setVariant] = useState<number>(0);
 

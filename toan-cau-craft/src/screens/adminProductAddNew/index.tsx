@@ -24,7 +24,8 @@ import { PlusCircle } from "lucide-react";
 import ModalCommon from "@/components/Modals/ModalCommon";
 import Lottie from "react-lottie";
 import { LottieApp } from "@/utils/lotties";
-import { useCloudStorage } from "@/hooks/useCloudStorage";
+import { handleUploadImage } from "@/utils/CloudStorage";
+import { statusObject } from "@/utils/constants";
 
 export type AddProductInput = {
   name: string;
@@ -35,19 +36,8 @@ export type AddProductInput = {
   status?: string
 };
 
-const statusObject = [
-  {
-    key: "active",
-    color: "success",
-  },
-  {
-    key: "pause",
-    color: "danger",
-  },
-];
-
 export const AdminProductAddNew = (): React.JSX.Element => {
-  const { handleUploadImage } = useCloudStorage();
+  const responseModal = useDisclosure();
 
   const [categories, setCategories] = useState<Category[]>([]);
   const [types, setTypes] = useState<Type[]>([]);
@@ -55,7 +45,6 @@ export const AdminProductAddNew = (): React.JSX.Element => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isSuccess, setIsSuccess] = useState<boolean>(true);
   const [responseMessage, setResponseMessage] = useState<string>();
-  const responseModal = useDisclosure();
 
   useEffect(() => {
     fetchData();

@@ -10,17 +10,35 @@ import {
   TableColumn,
   TableHeader,
   TableRow,
+  useDisclosure,
 } from "@nextui-org/react";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { twMerge } from "tailwind-merge";
 import { renderCell } from "./RenderCell";
-import { columns, fetchProducts, Product } from "@/models/Product";
+import {
+  columns,
+  deleteProduct,
+  fetchProducts,
+  Product,
+} from "@/models/Product";
 import { Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
+import Lottie from "react-lottie";
+import ModalCommon from "@/components/Modals/ModalCommon";
+import ModalConfirm, { ModalConfirmRef } from "@/components/Modals/ModalConfirm";
+import { asyncState } from "@/utils/constants";
+import { LottieApp } from "@/utils/lotties";
 
 export const AdminProducts = (): React.JSX.Element => {
-  const router = useRouter()
+  const router = useRouter();
+  const responseModal = useDisclosure();
+  const confirmModal = useDisclosure();
+
   const [products, setProducts] = useState<Product[]>([]);
+  const [state, setState] = useState<string>(asyncState.loading);
+  const [responseMessage, setResponseMessage] = useState<string>();
+
+  const confirmModalRef = useRef<ModalConfirmRef>(null);
   useEffect(() => {
     fetchInitProducts();
   }, []);
@@ -28,6 +46,35 @@ export const AdminProducts = (): React.JSX.Element => {
   const fetchInitProducts = async () => {
     const products = await fetchProducts();
     setProducts(products);
+  };
+
+  const handleDeleteProduct = async (id: string) => {
+    confirmModal.onOpen()
+    confirmModalRef.current?.setOnConfirm(()=>{
+      confirmModal.onClose()
+      responseModal.onOpen()
+      setResponseMessage("Đang xoá sản phẩm...")
+      deleteProduct(id).then(()=>{
+        let updatedProducts = products;
+        if (updatedProducts) {
+          updatedProducts = updatedProducts.filter((item) => item.id !== id);
+        }
+        setProducts(updatedProducts)
+        setResponseMessage("Hoàn tất")
+        setState(asyncState.success)
+        setTimeout(()=> {
+          responseModal.onClose()
+        },2000)
+      }).catch((e)=> {
+        setResponseMessage("Gặp lỗi khi xoá sản phẩm: " +e)
+        setState(asyncState.error)
+      })
+    })
+  };
+
+  const resetState = () => {
+    setState(asyncState.loading);
+    setResponseMessage("Vui lòng đợi...");
   };
 
   return (
@@ -45,7 +92,13 @@ export const AdminProducts = (): React.JSX.Element => {
         >
           Quản lý sản phẩm
         </h1>
-        <Button onClick={()=>{router.push('products/add-new')}} type="button" color="success">
+        <Button
+          onClick={() => {
+            router.push("products/add-new");
+          }}
+          type="button"
+          color="success"
+        >
           <h3>Thêm sản phẩm</h3>
           <Plus size={25} />
         </Button>
@@ -70,7 +123,10 @@ export const AdminProducts = (): React.JSX.Element => {
                   {renderCell({
                     product: item,
                     columnKey: columnKey,
-                    onGoUpdate: (slug) => {router.push('/admin/products/update/'+slug)}
+                    onGoUpdate: (slug) => {
+                      router.push("/admin/products/update/" + slug);
+                    },
+                    onDelete: (id) => handleDeleteProduct(id),
                   })}
                 </TableCell>
               )}
@@ -78,6 +134,60 @@ export const AdminProducts = (): React.JSX.Element => {
           )}
         </TableBody>
       </Table>
+
+      <ModalCommon onCloseModal={resetState} disclosure={responseModal}>
+        <p className="text-textPrimary text-xl my-5">{responseMessage}</p>
+        {state == asyncState.loading ? (
+          <Lottie
+            style={{ width: 100, height: 100 }}
+            options={{
+              loop: true,
+              autoplay: true,
+              animationData: LottieApp.Loading,
+              rendererSettings: {
+                preserveAspectRatio: "xMidYMid slice",
+              },
+            }}
+            isClickToPauseDisabled={true}
+            width={"100%"}
+          />
+        ) : state == asyncState.success ? (
+          <Lottie
+            style={{ width: 100, height: 100 }}
+            options={{
+              loop: true,
+              autoplay: true,
+              animationData: LottieApp.Success,
+              rendererSettings: {
+                preserveAspectRatio: "xMidYMid slice",
+              },
+            }}
+            isClickToPauseDisabled={true}
+            width={"100%"}
+          />
+        ) : (
+          <Lottie
+            style={{ width: 100, height: 100 }}
+            options={{
+              loop: true,
+              autoplay: true,
+              animationData: LottieApp.Error,
+              rendererSettings: {
+                preserveAspectRatio: "xMidYMid slice",
+              },
+            }}
+            isClickToPauseDisabled={true}
+            width={"100%"}
+          />
+        )}
+      </ModalCommon>
+      <ModalConfirm
+        variant={3}
+        ref={confirmModalRef}
+        disclosure={confirmModal}
+      >
+        <></>
+      </ModalConfirm>
     </div>
   );
 };
