@@ -18,6 +18,10 @@ const VariantMessage = [
     "Thay thế hình ảnh mới ?",
     "Hình ảnh trước đó sẽ bị xoá vĩnh viễn khỏi hệ thống",
   ],
+  [
+    "Thêm hình ảnh mới ?",
+    "Hãy đảm bảo dung lượng của ảnh không quá lớn",
+  ],
 ];
 
 export type CommonModalProps = {

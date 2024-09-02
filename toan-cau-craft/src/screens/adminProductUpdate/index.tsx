@@ -56,11 +56,11 @@ const statusObject = [
   },
 ];
 
-const asyncState ={
+const asyncState = {
   loading: "loading",
   success: "success",
-  error: "error"
-}
+  error: "error",
+};
 
 export const AdminProductUpdate = ({
   slug,
@@ -126,8 +126,8 @@ export const AdminProductUpdate = ({
       },
     }).then((data) => {
       if (data.data) {
-        setState(asyncState.success)
-        setResponseMessage("Thêm mới thành công");
+        setState(asyncState.success);
+        setResponseMessage("Cập nhập thành công");
         setTimeout(() => {
           responseModal.onClose();
         }, 2000);
@@ -153,33 +153,40 @@ export const AdminProductUpdate = ({
     { image, color }: ExportDataImage,
     index: number
   ) => {
+    confirmModal.onClose();
     responseModal.onOpen();
-    setState(asyncState.loading)
+    setState(asyncState.loading);
     setResponseMessage("Đang xoá ảnh cũ(nếu có)");
-    try{
+    try {
       if (product?.images && product?.images[index].url) {
         await deleteImage(product?.images[index].url).then().catch();
       }
-    }  catch (error) {
+    } catch (error) {
       setResponseMessage("Gặp vấn đề khi xoá ảnh cũ: " + error);
     }
-    setResponseMessage("Đang tải ảnh lên bộ nhớ đám mây");
-    const imageUploaded = await uploadImage({
-      color: color,
-      image: image,
-    });
 
     const updatedImages = product?.images;
-    if (updatedImages) {
-      updatedImages[index] = {
-        ...updatedImages[index],
-        url: imageUploaded.url,
-        color,
-      };
+
+    try {
+      setResponseMessage("Đang tải ảnh lên bộ nhớ đám mây");
+      const imageUploaded = await uploadImage({
+        color: color,
+        image: image,
+      });
+  
+      if (updatedImages) {
+        updatedImages[index] = {
+          ...updatedImages[index],
+          url: imageUploaded.url,
+          color,
+        };
+      }
+    } catch (error) {
+      setResponseMessage("Gặp vấn đề khi tải ảnh lên bộ nhớ đám mây: " + error);
     }
 
     responseModal.onOpen();
-    setState(asyncState.loading)
+    setState(asyncState.loading);
     setResponseMessage("Đang cập nhật dữ liệu mới");
     await updateProductImage({
       productId: product?.id ?? "",
@@ -189,8 +196,8 @@ export const AdminProductUpdate = ({
       },
     }).then((data) => {
       if (data.data) {
-        setState(asyncState.success)
-        setResponseMessage("Thêm mới thành công");
+        setState(asyncState.success);
+        setResponseMessage("Cập nhập thành công");
         setImages([]);
         setTimeout(() => {
           responseModal.onClose();
@@ -202,7 +209,7 @@ export const AdminProductUpdate = ({
   };
 
   const resetState = () => {
-    setState(asyncState.loading)
+    setState(asyncState.loading);
     setResponseMessage("Vui lòng đợi...");
   };
 
@@ -212,12 +219,12 @@ export const AdminProductUpdate = ({
 
   const onDeleteImageSource = async (url: string, index: number) => {
     responseModal.onOpen();
-    setState(asyncState.loading)
+    setState(asyncState.loading);
     setResponseMessage("Đang xoá ảnh");
     await deleteImage(url)
       .then(() => {
         setResponseMessage("Xoá ảnh thành công");
-        setState(asyncState.success)
+        setState(asyncState.success);
         setTimeout(() => {
           responseModal.onClose();
         }, 2000);
@@ -229,7 +236,7 @@ export const AdminProductUpdate = ({
     setResponseMessage("Đang cập nhật dữ liệu mới");
     let updatedImages = product?.images;
     if (updatedImages) {
-      updatedImages = updatedImages.filter((_, i) => i !== index)
+      updatedImages = updatedImages.filter((_, i) => i !== index);
     }
     await updateProductImage({
       productId: product?.id ?? "",
@@ -239,15 +246,15 @@ export const AdminProductUpdate = ({
       },
     }).then((data) => {
       if (data.data) {
-        setState(asyncState.success)
+        setState(asyncState.success);
         setResponseMessage("cập nhập thành công");
         setProduct({
           ...product,
-          images: updatedImages ?? []
-        })
+          images: updatedImages ?? [],
+        });
         setImages([]);
         setTimeout(() => {
-          responseModal.onClose(); 
+          responseModal.onClose();
         }, 2000);
       } else if (data.error) {
         setResponseMessage("Có lỗi xảy ra: \n" + data.error);
@@ -498,14 +505,14 @@ export const AdminProductUpdate = ({
               <AddingImageButton
                 imageDefault={item}
                 onCommitChange={({ image, color }) => {
-                  setVariant(1)
+                  setVariant(1);
                   confirmModal.onOpen();
                   confirmModalRef.current?.setOnConfirm(() =>
                     onCommitChangeUploadImage({ image, color }, index)
                   );
                 }}
                 onDelete={() => {
-                  setVariant(0)
+                  setVariant(0);
                   confirmModal.onOpen();
                   confirmModalRef.current?.setOnConfirm(() => {
                     onDeleteImageSource(item.url, index);
@@ -523,6 +530,13 @@ export const AdminProductUpdate = ({
                 onImagesUploadPreview={({ image, color }) =>
                   onImagesUploadPreview({ image, color }, index)
                 }
+                onCommitChange={({ image, color }) => {
+                  setVariant(2);
+                  onCommitChangeUploadImage(
+                    { image, color },
+                    index + (product?.images?.length ?? 0)
+                  );
+                }}
                 key={index}
               />
             </div>
@@ -592,7 +606,11 @@ export const AdminProductUpdate = ({
           />
         )}
       </ModalCommon>
-      <ModalConfirm variant={variant} ref={confirmModalRef} disclosure={confirmModal}>
+      <ModalConfirm
+        variant={variant}
+        ref={confirmModalRef}
+        disclosure={confirmModal}
+      >
         <></>
       </ModalConfirm>
     </div>
