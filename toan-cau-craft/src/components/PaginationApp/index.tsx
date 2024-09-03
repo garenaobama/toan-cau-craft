@@ -1,20 +1,33 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { cn, Pagination, PaginationItemType } from "@nextui-org/react";
 import { Icons } from "@/icons";
 import Image from "next/image";
 
-export default function PaginationApp() {
+type PaginationApp = {
+  key?: string,
+  value?: PaginationItemType,
+  onNext?: ()=>void,
+  onPrevious?: ()=>void,
+  setPage?: (value:number) =>void,
+  className?: string
+  total?: number
+}
+
+export default function PaginationApp({
+  onNext,
+  onPrevious,
+  setPage,
+  total=1,
+}: PaginationApp) {
+
+  const [currentPage, setCurrentPage] = useState<number>(1);
+
   const renderItem = ({
-    ref,
     key,
     value,
-    isActive,
-    onNext,
-    onPrevious,
-    setPage,
-    className,
-  }: any) => {
+    className
+  }: PaginationApp) => {
     if (value === PaginationItemType.NEXT) {
       return (
         <button
@@ -59,9 +72,13 @@ export default function PaginationApp() {
     return (
       <button
         key={key}
-        ref={ref}
-        className={cn(className, isActive && "text-white bg-textPrimary")}
-        onClick={() => setPage(value)}
+        className={cn(className, currentPage == value && "text-white bg-textPrimary")}
+        onClick={() => {
+          setCurrentPage(value??1)
+          if(setPage){
+            setPage(value??1)
+          }}
+        }
       >
         {value}
       </button>
@@ -75,7 +92,7 @@ export default function PaginationApp() {
       }}
       disableCursorAnimation
       showControls
-      total={10}
+      total={total}
       initialPage={1}
       className="gap-2"
       radius="full"

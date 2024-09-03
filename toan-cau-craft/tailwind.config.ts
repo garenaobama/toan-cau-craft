@@ -15,21 +15,24 @@ const config: Config = {
         "custom-gradient":
           "linear-gradient(90deg, rgba(0,0,0,0.7455357142857143) 0%, rgba(255,255,255,0.1516981792717087) 100%)",
         "vertical-gradient":
-          "linear-gradient(0deg, rgba(0,0,0,0.7455357142857143) 0%, rgba(255,255,255,0) 60%, rgba(255,255,255,0.1516981792717087) 100%)"
+          "linear-gradient(0deg, rgba(0,0,0,0.7455357142857143) 0%, rgba(255,255,255,0) 60%, rgba(255,255,255,0.1516981792717087) 100%)",
+        "white-vertical":
+          "linear-gradient(180deg, rgba(255,255,255,1) 24%, rgba(255,255,255,0.1516981792717087) 100%); ",
       },
       fontFamily: {
         "island-moments": ["island-moments", "sans-serif"],
       },
       spacing: {
-        '128': '32rem',
-        '146': '36.5rem'
-      }
+        "128": "32rem",
+        "146": "36.5rem",
+      },
     },
     colors: {
       //transparent
       blurEffect: "#0000007a",
       blurEffectWhite: "#ffffff85",
       blurEffectGold: "#e39d4096",
+      transBlue: "#f4f4f5bd",
 
       //theme
       themeWhite: "#ffffff",
@@ -52,9 +55,9 @@ const config: Config = {
       //card:
       anitiqueWhite: "#faebd7",
 
-      //table 
+      //table
       tableBorder500: "#a4a5aa99",
-      tableBorder400: "#a4a5aa75"
+      tableBorder400: "#a4a5aa75",
     },
   },
   darkMode: "class",

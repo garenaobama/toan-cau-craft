@@ -134,25 +134,66 @@ export const columns = [
     }
   };
 
-export const fetchProducts = async (): Promise<Product[]> => {
-    try {
-      const querySnapshot = await getDocs(collection(firestore, COLLECTION_ID));
-      const products: Product[] = await Promise.all(
-        querySnapshot.docs.map(async (productDoc) => {
-          const productData = productDoc.data() as Product;
+ export interface FetchProductsParams {
+    page?: number;
+    limit?: number;
+    category?: string;
+    type?: string;
+    name?: string;
+  }
 
+  interface FetchProductsResult {
+    products: Product[];
+    totalPages: number;
+    totalDocs: number
+  }
+
+  export const fetchProducts = async ({
+    page = 1,
+    limit = 10,
+    category,
+    type,
+    name,
+  }: FetchProductsParams): Promise<FetchProductsResult> => {
+    try {
+      let productsQuery = query(collection(firestore, COLLECTION_ID));
+  
+      if (category) {
+        const categoryDocRef = doc(firestore, "categories", category);
+        productsQuery = query(productsQuery, where("category", "==", categoryDocRef));
+      }
+      if (type) {
+        const typeDocRef = doc(firestore, "types", type);
+        productsQuery = query(productsQuery, where("type", "==", typeDocRef));
+      }
+    if (name) {
+      const startName = name;
+      const endName = name + '\uf8ff'; // '\uf8ff' is a high Unicode character that comes after any other character
+      productsQuery = query(productsQuery, where("name", ">=", startName), where("name", "<=", endName));
+    }
+  
+      const querySnapshot = await getDocs(productsQuery);
+      const totalDocs = querySnapshot.docs.length;
+      const totalPages = Math.ceil(totalDocs / limit);
+      const startIndex = (page - 1) * limit;
+      const endIndex = Math.min(startIndex + limit, totalDocs);
+  
+      const products: Product[] = await Promise.all(
+        querySnapshot.docs.slice(startIndex, endIndex).map(async (productDoc) => {
+          const productData = productDoc.data() as Product;
+  
           const categoryDoc = await getDoc(doc(firestore, "categories", productData.category?.id ?? ""));
           const typeDoc = await getDoc(doc(firestore, "types", productData.type?.id ?? ""));
           return {
             ...productData,
             id: productDoc.id,
-            type: typeDoc.data() as Type ,
+            type: typeDoc.data() as Type,
             category: categoryDoc.data() as Category,
           };
         })
       );
   
-      return products;
+      return { products, totalPages, totalDocs };
     } catch (error) {
       console.error("Error fetching products: ", error);
       throw new Error("Failed to fetch products");

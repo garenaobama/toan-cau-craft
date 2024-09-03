@@ -8,6 +8,7 @@ import {
 import {
   BreadcrumbItem,
   Breadcrumbs,
+  Image,
   Table,
   TableBody,
   TableCell,
@@ -15,17 +16,38 @@ import {
   TableHeader,
   TableRow,
 } from "@nextui-org/react";
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import { twMerge } from "tailwind-merge";
-import NextImage from "next/image";
 import { ProductCard } from "@/components/ProductCard";
 import { useRouter } from "next/navigation";
+import { fetchProductBySlug, fetchProducts, Product } from "@/models/Product";
 
-export const ProductDetail = (): React.JSX.Element => {
-  const [currentImage, setCurrentImage] = useState();
+export const ProductDetail = ({
+  slug,
+}: {
+  slug: string;
+}): React.JSX.Element => {
+  const [currentImage, setCurrentImage] = useState<number>(0);
   const [currentColor, setCurrentColor] = useState();
+  const [products, setProducts] = useState<Product[]>([]);
+  const [product, setProduct] = useState<Product | null>();
+
   const router = useRouter();
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    const product_f = await fetchProductBySlug(slug);
+    const products = await fetchProducts({
+      category: product?.category?.id,
+      limit: 5,
+    });
+    setProducts(products.products);
+    setProduct(product_f);
+  };
 
   return (
     <div>
@@ -35,52 +57,40 @@ export const ProductDetail = (): React.JSX.Element => {
         variant={"light"}
       >
         <BreadcrumbItem>Home</BreadcrumbItem>
-        <BreadcrumbItem>Category</BreadcrumbItem>
-        <BreadcrumbItem>Type</BreadcrumbItem>
-        <BreadcrumbItem>Product name</BreadcrumbItem>
+        <BreadcrumbItem>Products</BreadcrumbItem>
+        <BreadcrumbItem>{product?.name}</BreadcrumbItem>
       </Breadcrumbs>
 
       <div className="grid grid-cols-5">
         <div className="col-span-3 h-146 grid grid-cols-5">
-          <div className="col-span-4 mr-3 my-2 overflow-hidden relative">
-            <NextImage
-              className="w-full absolute"
-              fill
-              objectFit="cover"
-              src="/images/demo_product_1.png"
+          <div className="col-span-4 mr-3 my-2 overflow-hidden relative flex justify-center bg-anitiqueWhite rounded-2xl">
+            <Image
+              classNames={{
+                wrapper: "w-full h-full",
+              }}
+              className="w-full h-full"
+              src={product?.images ? product?.images[currentImage].url : ""}
               alt="product image"
             />
           </div>
 
           <div className="col-span-1 h-146 grid grid-rows-4 mr-6 relative">
-            <div className="row-span-1 relative m-2">
-              <NextImage
-                fill
-                src="/images/demo_product_1.png"
-                alt="product image"
-              />
-            </div>
-            <div className="row-span-1 relative m-2">
-              <NextImage
-                fill
-                src="/images/demo_product_1.png"
-                alt="product image"
-              />
-            </div>
-            <div className="row-span-1 relative m-2">
-              <NextImage
-                fill
-                src="/images/demo_product_1.png"
-                alt="product image"
-              />
-            </div>
-            <div className="row-span-1 relative m-2">
-              <NextImage
-                fill
-                src="/images/demo_product_1.png"
-                alt="product image"
-              />
-            </div>
+            {product?.images?.map((item, index) => (
+              <button
+                key={index}
+                onClick={() => setCurrentImage(index)}
+                className="row-span-1 relative m-2 flex justify-center bg-anitiqueWhite rounded-2xl"
+              >
+                <Image
+                  classNames={{
+                    wrapper: "w-full h-full",
+                  }}
+                  className="w-full h-full"
+                  src={product?.images ? product?.images[index].url : ""}
+                  alt="product image"
+                />
+              </button>
+            ))}
           </div>
         </div>
 
@@ -92,10 +102,10 @@ export const ProductDetail = (): React.JSX.Element => {
                 "text-textPrimary text-4xl text-start mt-3"
               )}
             >
-              {"Plate"}
+              {product?.name}
             </h1>
 
-            <div className="flex gap-1 mt-2">
+            <div className="flex gap-1 mt-3">
               <h3
                 className={twMerge(
                   latoRegular.className,
@@ -110,7 +120,7 @@ export const ProductDetail = (): React.JSX.Element => {
                   "text-textPrimary text-xs text-start"
                 )}
               >
-                {"Recycled rubber products"}
+                {product?.category?.name.toLowerCase()}
               </h3>
             </div>
 
@@ -121,9 +131,7 @@ export const ProductDetail = (): React.JSX.Element => {
                   "text-textSecondary text-base text-start"
                 )}
               >
-                {
-                  "Consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam quis in exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.” "
-                }
+                {product?.description}
               </p>
             </div>
 
@@ -185,7 +193,7 @@ export const ProductDetail = (): React.JSX.Element => {
                   latoRegular.className
                 )}
               >
-                New Products
+                {product?.category?.name}
               </TableCell>
             </TableRow>
             <TableRow className="border border-tableBorder400" key="1">
@@ -203,7 +211,7 @@ export const ProductDetail = (): React.JSX.Element => {
                   latoRegular.className
                 )}
               >
-                002
+                {product?.specification?.sku}
               </TableCell>
             </TableRow>
             <TableRow className="border border-tableBorder400" key="1">
@@ -221,7 +229,7 @@ export const ProductDetail = (): React.JSX.Element => {
                   latoRegular.className
                 )}
               >
-                Flower
+                {product?.specification?.tags}
               </TableCell>
             </TableRow>
             <TableRow className="border border-tableBorder400" key="1">
@@ -239,7 +247,7 @@ export const ProductDetail = (): React.JSX.Element => {
                   latoRegular.className
                 )}
               >
-                40x26xH6cm{" "}
+                {product?.specification?.dimensions}
               </TableCell>
             </TableRow>
             <TableRow className="border border-tableBorder400" key="1">
@@ -257,7 +265,7 @@ export const ProductDetail = (): React.JSX.Element => {
                   latoRegular.className
                 )}
               >
-                Pottery
+                {product?.specification?.materials}
               </TableCell>
             </TableRow>
           </TableBody>
@@ -274,51 +282,20 @@ export const ProductDetail = (): React.JSX.Element => {
           {"You may be interested in"}
         </h2>
         <div className="grid grid-cols-5 mt-8">
-          <ProductCard
-            onClick={() => {
-              router.push("product-detail/demo-product-1");
-            }}
-            className="col-span-1 m-4"
-            src="/images/demo_product_1.png"
-            name="Olpe"
-            category="Ceramic"
-          />
-          <ProductCard
-            onClick={() => {
-              router.push("product-detail/demo-product-1");
-            }}
-            className="col-span-1 m-4"
-            src="/images/demo_product_2.png"
-            name="Olpe"
-            category="Ceramic"
-          />
-          <ProductCard
-            onClick={() => {
-              router.push("product-detail/demo-product-1");
-            }}
-            className="col-span-1 m-4"
-            src="/images/demo_product_3.png"
-            name="Olpe"
-            category="Ceramic"
-          />
-          <ProductCard
-            onClick={() => {
-              router.push("product-detail/demo-product-1");
-            }}
-            className="col-span-1 m-4"
-            src="/images/demo_product_4.png"
-            name="Olpe"
-            category="Ceramic"
-          />
-          <ProductCard
-            onClick={() => {
-              router.push("product-detail/demo-product-1");
-            }}
-            className="col-span-1 m-4"
-            src="/images/demo_product_4.png"
-            name="Olpe"
-            category="Ceramic"
-          />
+          {products.map((item) => (
+            <ProductCard
+              key={item.id}
+              onClick={() => {
+                router.push("products/product-detail/" + item.slug);
+              }}
+              className="col-span-1 m-2"
+              src={
+                item.images ? item.images[0].url : "/images/demo_product_1.png"
+              }
+              name={item.name ?? "Product"}
+              category={item.specification?.materials ?? ""}
+            />
+          ))}
         </div>
       </div>
     </div>

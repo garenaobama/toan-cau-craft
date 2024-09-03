@@ -19,6 +19,13 @@ export const cormorantSemiBold = Cormorant({
   weight: "600"
 })
 
+export const cormorantSemiBoldItalic = Cormorant({
+  subsets: ['latin'],
+  display: 'swap',
+  weight: "600",
+  style: 'italic'
+})
+
 
 //lato
 export const latoRegular = Lato({

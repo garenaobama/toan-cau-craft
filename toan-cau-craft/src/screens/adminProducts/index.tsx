@@ -35,6 +35,7 @@ export const AdminProducts = (): React.JSX.Element => {
   const confirmModal = useDisclosure();
 
   const [products, setProducts] = useState<Product[]>([]);
+  const [totalPage, setTotalPAge] = useState<number>(1);
   const [state, setState] = useState<string>(asyncState.loading);
   const [responseMessage, setResponseMessage] = useState<string>();
 
@@ -44,8 +45,9 @@ export const AdminProducts = (): React.JSX.Element => {
   }, []);
 
   const fetchInitProducts = async () => {
-    const products = await fetchProducts();
-    setProducts(products);
+    const products = await fetchProducts({});
+    setProducts(products.products);
+    setTotalPAge(products.totalPages);
   };
 
   const handleDeleteProduct = async (id: string) => {
