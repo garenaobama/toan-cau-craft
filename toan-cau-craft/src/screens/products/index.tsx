@@ -6,7 +6,7 @@ import { cormorantSemiBold, latoRegular } from "@/fonts";
 import { twMerge } from "tailwind-merge";
 import { FilterBox } from "./FilterBox";
 import PaginationApp from "@/components/PaginationApp";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { fetchProducts, FetchProductsParams, Product } from "@/models/Product";
 import { Category, fetchCategories } from "@/models/Category";
 import { fetchTypes, Type } from "@/models/Type";
@@ -24,19 +24,37 @@ export const Products = (): React.JSX.Element => {
   const [totalItems, setTotalItem] = useState<number>(1);
   const [state, setState] = useState<string>(asyncState.loading);
 
+  const searchParams = useSearchParams();
+  const filterCategory = searchParams.get("category") || undefined;
+  const filterType = searchParams.get("type") || undefined;
+  const filterName = searchParams.get("name") || undefined;
+
   const topProductRef = useRef<HTMLDivElement>(null);
 
   const [filter, setFilter] = useState<FetchProductsParams>({
     page: 1,
     limit: 12,
-    category: undefined,
-    type: undefined,
-    name: undefined,
+    category: filterCategory,
+    type: filterType,
+    name: filterName,
   });
 
   useEffect(() => {
     fetchInit();
   }, []);
+
+  useEffect(() => {
+    handleNavigateFilter();
+  }, [filterCategory, filterType, filterName]);
+
+  const handleNavigateFilter = () => {
+    setFilter({
+      ...filter,
+      category: filterCategory,
+      type: filterType,
+      name: filterName,
+    })
+  }
 
   const fetchInit = async () => {
     await fetchProduct();
@@ -61,6 +79,7 @@ export const Products = (): React.JSX.Element => {
   useEffect(() => {
     fetchProduct();
   }, [filter]);
+
 
   return (
     <div className="bg-themeWhite">

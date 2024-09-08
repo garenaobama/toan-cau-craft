@@ -23,6 +23,15 @@ import { ProductCard } from "@/components/ProductCard";
 import { useRouter } from "next/navigation";
 import { fetchProductBySlug, fetchProducts, Product } from "@/models/Product";
 
+const getRandomColor = (): string => {
+  const letters = '0123456789ABCDEF';
+  let color = '#';
+  for (let i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
+};
+
 export const ProductDetail = ({
   slug,
 }: {
@@ -65,34 +74,34 @@ export const ProductDetail = ({
         <div className="col-span-3 h-146 grid grid-cols-5">
           <div className="col-span-4 mr-3 my-2 overflow-hidden relative flex justify-center bg-anitiqueWhite rounded-2xl">
             <Image
-              classNames={{
-                wrapper: "w-full h-full",
-              }}
               className="w-full h-full"
               src={product?.images ? product?.images[currentImage].url : ""}
               alt="product image"
             />
           </div>
 
-          <div className="col-span-1 h-146 grid grid-rows-4 mr-6 relative">
+          <div className="h-146 overflow-y-scroll flex flex-col gap-2 mr-6">
             {product?.images?.map((item, index) => (
               <button
                 key={index}
                 onClick={() => setCurrentImage(index)}
-                className="row-span-1 relative m-2 flex justify-center bg-anitiqueWhite rounded-2xl"
+                className={`relative mb-2 flex justify-center items-center size-32 bg-anitiqueWhite rounded-2xl border-2 ${currentImage === index ? 'border-blurEffect' : ''}`}
               >
-                <Image
-                  classNames={{
-                    wrapper: "w-full h-full",
-                  }}
-                  className="w-full h-full"
-                  src={product?.images ? product?.images[index].url : ""}
-                  alt="product image"
-                />
+                <div className="relative shadow-black/5 shadow-none rounded-large w-full h-full">
+                  <img
+                    className="rounded-large w-full h-full object-contain"
+                    src={item.url}
+                    alt="product thumbnail"
+                  />
+
+                </div>
+
               </button>
             ))}
           </div>
         </div>
+
+
 
         <div className="col-span-2 ml-8">
           <div className="max-w-sm">
@@ -146,10 +155,16 @@ export const ProductDetail = ({
               </p>
 
               <div className="flex gap-3 ">
-                <ColorButton color="bg-blurEffectGold"></ColorButton>
-                <ColorButton color="bg-blurEffect"></ColorButton>
-                <ColorButton color="bg-inputSecondary"></ColorButton>
-                <ColorButton color="bg-blurEffectWhite"></ColorButton>
+                {
+                  product?.images?.map((image, index) =>
+                    <ColorButton
+                      onClick={() => setCurrentImage(index)}
+                      isChosen={currentImage === index ? true : false}
+                      style={{ background: image?.color === "none" ? "#fff" : (image?.color || "#fff") }}
+                    >
+                    </ColorButton>
+                  )
+                }
               </div>
             </div>
           </div>
@@ -306,10 +321,12 @@ const ColorButton = ({
   color,
   isChosen = false,
   onClick,
+  style
 }: {
-  color: string;
+  color?: string;
   isChosen?: boolean;
   onClick?: () => void;
+  style?: React.CSSProperties
 }) => {
   return (
     <button
@@ -319,6 +336,7 @@ const ColorButton = ({
         color,
         isChosen ? "border-3 border-textPrimary" : ""
       )}
+      style={style}
     ></button>
   );
 };

@@ -8,9 +8,11 @@ import { CategoryCard } from "@/components/CategoryCard";
 import { ButtonApp } from "@/components";
 import { ProductCard } from "@/components/ProductCard";
 import { useRouter } from "next/navigation";
+import { useAppSelector } from "@/store/store";
 
 export const Home = (): React.JSX.Element => {
   const router = useRouter();
+  const categories = useAppSelector((state) => state.category);
 
   return (
     <div>
@@ -36,72 +38,32 @@ export const Home = (): React.JSX.Element => {
         </h3>
         <div className="w-full mt-10">
           <div className="grid sm:grid-cols-2">
-            <CategoryCard
-              onClick={() => {
-                router.push("products");
-              }}
-              className="col-span-1 m-4"
-              src="/images/demo_cate_01.png"
-              title="Recycled rubber products"
-            />
-            <CategoryCard
-              onClick={() => {
-                router.push("products");
-              }}
-              className="col-span-1 m-4"
-              src="/images/demo_cate_02.png"
-              title="Mother of pearl mosaic products"
-            />
+            {
+              categories?.length > 0 && categories.slice(0,2).map((category) => (
+                <CategoryCard
+                  onClick={() => {
+                    router.push("products");
+                  }}
+                  className="col-span-1 m-4"
+                  src={category.image}
+                  title={category.name}
+                />
+              ))
+            }
           </div>
           <div className="grid sm:grid-cols-3">
-            <CategoryCard
-              onClick={() => {
-                router.push("products");
-              }}
-              className="col-span-1 m-4 h-80"
-              src="/images/demo_cate_03.png"
-              title="Buffalo horn products"
-            />
-            <CategoryCard
-              onClick={() => {
-                router.push("products");
-              }}
-              className="col-span-1 m-4 h-80"
-              src="/images/demo_cate_04.png"
-              title="Mother of pearl products"
-            />
-            <CategoryCard
-              onClick={() => {
-                router.push("products");
-              }}
-              className="col-span-1 m-4 h-80"
-              src="/images/demo_cate_05.png"
-              title="Wooden products"
-            />
-            <CategoryCard
-              onClick={() => {
-                router.push("products");
-              }}
-              className="col-span-1 m-4 h-80"
-              src="/images/demo_cate_06.png"
-              title="Bamboo products"
-            />
-            <CategoryCard
-              onClick={() => {
-                router.push("products");
-              }}
-              className="col-span-1 m-4 h-80"
-              src="/images/demo_cate_07.png"
-              title="Coconut products"
-            />
-            <CategoryCard
-              onClick={() => {
-                router.push("products");
-              }}
-              className="col-span-1 m-4 h-80"
-              src="/images/demo_cate_08.png"
-              title="Lacquer products"
-            />
+          {
+              categories?.length > 0 && categories.slice(2, 8).map((category) => (
+                <CategoryCard
+                  onClick={() => {
+                    router.push("products");
+                  }}
+                  className="col-span-1 m-4"
+                  src={category.image}
+                  title={category.name}
+                />
+              ))
+            }
           </div>
         </div>
       </div>
@@ -136,7 +98,9 @@ export const Home = (): React.JSX.Element => {
                 porttitor ac et blandit. Pretium urna at ac purus aliquet
                 mauris. Sit feugiat mattis turpis congue justo.
               </p>
-              <ButtonApp className="mt-9" title="VIEW PRODUCTS" />
+              <ButtonApp className="mt-9" title="VIEW PRODUCTS" handleNavigate={() => {
+                router.push("products");
+              }} />
             </div>
           </div>
           <div className="col-span-1 sm:h-96">

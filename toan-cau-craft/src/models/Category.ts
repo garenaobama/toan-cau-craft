@@ -6,6 +6,7 @@ const COLLECTION_ID = "categories"
 export type Category = {
   id: string;
   name: string;
+  image: string;
   slug: string;
 };
 
@@ -20,6 +21,7 @@ export const columns = [
     category: {
         name: string
         slug: string;
+        image: string;
     }
   }
 
@@ -29,6 +31,7 @@ export const fetchCategories = async (): Promise<Category[]> => {
     const categories: Category[] = querySnapshot.docs.map((doc) => ({
       id: doc.id,
       name: doc.data().name,
+      image: doc.data().image,
       slug: doc.data().slug,
     }));
     return categories;

@@ -6,9 +6,11 @@ import { twMerge } from "tailwind-merge";
 export const SearchBox = ({
   className,
   onChange,
-  onSubmit
+  onSubmit,
+  defaultValue = ''
 }: {
   className?: string;
+  defaultValue?: string;
   onChange?: (keys: string) => void;
   onSubmit?: (keys: string) => void;
 }) => {
@@ -30,6 +32,7 @@ export const SearchBox = ({
       <form onSubmit={handleSubmit}>
         <input
           onChange={(e) => setValue(e.target.value)}
+          defaultValue={defaultValue}
           type="text"
           name="search"
           id="search"

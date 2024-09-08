@@ -1,9 +1,13 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { useDispatch, TypedUseSelectorHook, useSelector } from "react-redux";
 import { appModalReducer } from "./modalState";
+import { categoryReducer } from "./categoryState";
 
 export const store = configureStore({
-  reducer: { appModal: appModalReducer },
+  reducer: { 
+    appModal: appModalReducer,
+    category: categoryReducer
+  },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({ serializableCheck: false }),
 });

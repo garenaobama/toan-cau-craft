@@ -4,7 +4,6 @@ import { useAppSelector } from "@/store/store";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect } from "react";
-import { SearchBox } from "../SearchBox";
 import { latoRegular, leagueSpartanRegular } from "@/fonts";
 import { twMerge } from "tailwind-merge";
 
