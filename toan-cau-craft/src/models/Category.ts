@@ -1,5 +1,7 @@
-import { firestore } from "@/utils/FireBase";
+import { firestore, storage } from "@/utils/FireBase";
 import { addDoc, collection, deleteDoc, doc, getDocs } from "firebase/firestore";
+import { deleteObject, getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
+import { v4 as uuidv4 } from "uuid";
 
 const COLLECTION_ID = "categories"
 
@@ -57,4 +59,74 @@ export const addCategory = async ({ category }: AddCategoryProps) => {
     } catch (error) {
       console.error('Error deleting documents:', error);
     }
+  };
+
+  export const handleUploadImage = async ({
+    image,
+    name
+  }: {
+    name: string,
+    image: File | undefined;
+  }): Promise<string> => {
+    let result = '';
+    try {
+      const imageCategory = await uploadImage({
+        name: name,
+        image: image
+      });
+      result = imageCategory
+    } catch (error) {
+      console.error(`Error uploading image:`, error);
+    }
+    return result;
+  };
+  
+  export const uploadImage = (image: {
+    image: File | undefined;
+    name: string;
+  }): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      if (!image.image) {
+        reject(new Error("Image file is undefined"));
+        console.log("empty");
+        return;
+      }
+      console.log("uploading");
+      const storageRef = ref(storage, `categories/${uuidv4()}`);
+      const uploadTask = uploadBytesResumable(storageRef, image.image);
+  
+      uploadTask.on(
+        "state_changed",
+        () => {},
+        (error) => {
+          console.error(error);
+          reject(error);
+        },
+        () => {
+          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+            resolve(downloadURL);
+          });
+        }
+      );
+    });
+  };
+  
+  export const deleteImage = (imageUrl: string): Promise<void> => {
+    console.log(imageUrl);
+  
+    return new Promise((resolve, reject) => {
+      // Create a reference to the file to delete
+      const storageRef = ref(storage, imageUrl);
+  
+      // Delete the file
+      deleteObject(storageRef)
+        .then(() => {
+          console.log("File deleted successfully");
+          resolve();
+        })
+        .catch((error) => {
+          console.error("Error deleting file:", error);
+          reject(error);
+        });
+    });
   };

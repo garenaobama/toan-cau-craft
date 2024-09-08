@@ -1,4 +1,5 @@
-import React from "react";
+"use client";
+import React, { useState } from "react";
 import { ButtonApp } from "@/components";
 import { TopBanner } from "@/components/TopBanner";
 import { cormorantSemiBold, latoRegular } from "@/fonts";
@@ -6,8 +7,60 @@ import { Icons } from "@/icons";
 import { Input, Textarea } from "@nextui-org/react";
 import Image from "next/image";
 import { twMerge } from "tailwind-merge";
+import { sendMail } from "@/utils/Gmail";
+import { Button } from "@nextui-org/button";
+import { toast } from "react-toastify";
 
+
+interface IForm {
+  message: string
+  email: string
+  name: string
+}
 export const ContactUs = (): React.JSX.Element => {
+  const EMAIL = "laingoclamdev@gmail.com"
+
+  const [form, setForm] = useState<IForm>();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const handleFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target
+    setForm({
+      ...form,
+      [name]: value
+    } as IForm)
+  }
+
+  const resetForm = () => {
+    setForm({
+      name: '',
+      email: '',
+      message: '',
+    })
+  }
+  const handleSendMail = async () => {
+    try {
+      if (form?.email && form?.name && form?.message) {
+        setIsLoading(true);
+        const res = await sendMail({
+          sendTo: EMAIL,
+          subject: 'NEW MESSAGE FROM WEBSITE TOAN CAU',
+          html: `
+            <p>You have received a new message from <strong>${form?.name || ''}</strong> (${form?.email || ''}):</p>
+            <p>${form?.message || ''}</p>
+          `
+        })
+        setIsLoading(false);
+        resetForm();
+        toast.success("Please check your mail")
+      }
+
+    } catch (error) {
+      console.log('error', error);
+      toast.error("Something went wrong")
+      setIsLoading(false);
+    }
+  }
   return (
     <div>
       <TopBanner
@@ -100,14 +153,45 @@ export const ContactUs = (): React.JSX.Element => {
                 Contact us
               </h1>
               <div className="grid grid-cols-2 gap-6">
-                <InputItem label="Name" placeHolder="Enter your name" />
-                <InputItem label="Email" placeHolder="Enter your email" />
+                <InputItem label="Name" placeHolder="Enter your name" name="name" value={form?.name || ''} onChange={((e: React.ChangeEvent<HTMLInputElement>) => handleFormChange(e))} />
+                <InputItem label="Email" placeHolder="Enter your email" name="email" value={form?.email || ''} onChange={((e: React.ChangeEvent<HTMLInputElement>) => handleFormChange(e))} />
                 <AreaInputItem
                   label="Message"
                   placeHolder="Enter your message"
+                  name="message"
+                  value={form?.message || ''}
+                  onChange={((e: React.ChangeEvent<HTMLInputElement>) => handleFormChange(e))}
                 />
               </div>
-              <ButtonApp title="SEND MESSAGE" className="mt-12" />
+              <Button 
+                className="bg-themeDark rounded-lg text-themeWhite font-light  mt-12 text-[15px]" 
+                onClick={handleSendMail} 
+                isLoading={isLoading}
+                spinner={
+                  <svg
+                    className="animate-spin h-5 w-5 text-current"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    />
+                    <path
+                      className="opacity-75"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                      fill="currentColor"
+                    />
+                  </svg>
+                }
+                >
+                {isLoading ? "LOADING" : "SEND MESSAGE"}
+              </Button>
             </div>
           </div>
         </div>
@@ -119,9 +203,15 @@ export const ContactUs = (): React.JSX.Element => {
 const InputItem = ({
   label,
   placeHolder,
+  onChange,
+  name,
+  value
 }: {
   label: string;
   placeHolder: string;
+  name: string;
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }) => {
   return (
     <Input
@@ -136,6 +226,9 @@ const InputItem = ({
       variant={"underlined"}
       label={label}
       placeholder={placeHolder}
+      onChange={onChange}
+      name={name}
+      value={value}
     />
   );
 };
@@ -143,9 +236,15 @@ const InputItem = ({
 const AreaInputItem = ({
   label,
   placeHolder,
+  onChange,
+  name,
+  value
 }: {
   label: string;
   placeHolder: string;
+  name: string;
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }) => {
   return (
     <Textarea
@@ -160,6 +259,9 @@ const AreaInputItem = ({
       variant={"underlined"}
       label={label}
       placeholder={placeHolder}
+      onChange={onChange}
+      name={name}
+      value={value}
     />
   );
 };

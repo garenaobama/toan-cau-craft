@@ -4,6 +4,11 @@ import {
   BreadcrumbItem,
   Breadcrumbs,
   Button,
+  Input,
+  Pagination,
+  Select,
+  SelectItem,
+  Spinner,
   Table,
   TableBody,
   TableCell,
@@ -19,44 +24,93 @@ import {
   columns,
   deleteProduct,
   fetchProducts,
+  FetchProductsParams,
   Product,
 } from "@/models/Product";
-import { Plus } from "lucide-react";
+import { Plus, Search } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Lottie from "react-lottie";
 import ModalCommon from "@/components/Modals/ModalCommon";
 import ModalConfirm, { ModalConfirmRef } from "@/components/Modals/ModalConfirm";
 import { asyncState } from "@/utils/constants";
 import { LottieApp } from "@/utils/lotties";
+import { Category, fetchCategories } from "@/models/Category";
+import { fetchTypes, Type } from "@/models/Type";
 
 export const AdminProducts = (): React.JSX.Element => {
   const router = useRouter();
   const responseModal = useDisclosure();
   const confirmModal = useDisclosure();
 
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [types, setTypes] = useState<Type[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
-  const [totalPage, setTotalPAge] = useState<number>(1);
+  const [totalPage, setTotalPage] = useState<number>(1);
   const [state, setState] = useState<string>(asyncState.loading);
   const [responseMessage, setResponseMessage] = useState<string>();
 
   const confirmModalRef = useRef<ModalConfirmRef>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [filter, setFilter] = useState<FetchProductsParams>({
+    page: 1,
+    limit: 12,
+    category: '',
+    type: '',
+    name: '',
+  });
+  const handleChangeFilter = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const {name, value} = e.target;
+    setFilter({
+      ...filter,
+      [name]: value
+    })
+  }
+  const handleNameFilterChange = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if(e.key === 'Enter') {
+      const {name, value} = (e.target as HTMLInputElement);
+      setFilter({
+        ...filter,
+        [name]: value
+      })
+    }
+   
+  }
+  const rowsPerPage = 5;
+
   useEffect(() => {
-    fetchInitProducts();
+    fetchInitCategories();
+    fetchInitTypes();
   }, []);
 
+  useEffect(() => {
+    fetchInitProducts();
+  }, [filter]);
+
   const fetchInitProducts = async () => {
-    const products = await fetchProducts({});
+    setIsLoading(true);
+    const products = await fetchProducts(filter);
+    setIsLoading(false);
     setProducts(products.products);
-    setTotalPAge(products.totalPages);
+    setTotalPage(products.totalPages);
   };
+
+  const fetchInitCategories = async () => {
+    const res = await fetchCategories();
+    setCategories(res)
+  }
+  const fetchInitTypes = async () => {
+    const res = await fetchTypes();
+    setTypes(res)
+  }
+
 
   const handleDeleteProduct = async (id: string) => {
     confirmModal.onOpen()
-    confirmModalRef.current?.setOnConfirm(()=>{
+    confirmModalRef.current?.setOnConfirm(() => {
       confirmModal.onClose()
       responseModal.onOpen()
       setResponseMessage("Đang xoá sản phẩm...")
-      deleteProduct(id).then(()=>{
+      deleteProduct(id).then(() => {
         let updatedProducts = products;
         if (updatedProducts) {
           updatedProducts = updatedProducts.filter((item) => item.id !== id);
@@ -64,11 +118,11 @@ export const AdminProducts = (): React.JSX.Element => {
         setProducts(updatedProducts)
         setResponseMessage("Hoàn tất")
         setState(asyncState.success)
-        setTimeout(()=> {
+        setTimeout(() => {
           responseModal.onClose()
-        },2000)
-      }).catch((e)=> {
-        setResponseMessage("Gặp lỗi khi xoá sản phẩm: " +e)
+        }, 2000)
+      }).catch((e) => {
+        setResponseMessage("Gặp lỗi khi xoá sản phẩm: " + e)
         setState(asyncState.error)
       })
     })
@@ -105,8 +159,56 @@ export const AdminProducts = (): React.JSX.Element => {
           <Plus size={25} />
         </Button>
       </div>
+      <div className="flex items-center justify-between mt-5">
+        <div className="w-1/5">
+          <Input 
+            label="Tên sản phẩm" 
+            name="name"
+            endContent={<Search color="#000" height={'100%'}/>} 
+            onKeyDown={(e:  React.KeyboardEvent<HTMLInputElement>) => handleNameFilterChange(e)}
+            />
+        </div>
+        <div className="flex w-3/5 space-x-4">
+          <Select defaultSelectedKeys={[filter.category || '']} label="Category" name="category" onChange={(e: React.ChangeEvent<HTMLSelectElement>) => handleChangeFilter(e)}>
+            <SelectItem className="text-themeDark" key={''} >All</SelectItem>
+            {
+              categories && categories.map((category) =>
+                <SelectItem className="text-themeDark" key={category.id} >{category.name}</SelectItem>
+              ) as any
+            }
+          </Select>
+          <Select defaultSelectedKeys={[filter.type || '']} label="Type" name="type" onChange={(e: React.ChangeEvent<HTMLSelectElement>) => handleChangeFilter(e)}>
+            <SelectItem className="text-themeDark" key={''}>All</SelectItem>
+            {
+              types && types.map((type) =>
+                <SelectItem className="text-themeDark" key={type.id}>{type.name}</SelectItem>
+              ) as any
+            }
+          </Select>
+        </div>
+      </div>
 
-      <Table className="mt-5" aria-label="Example table with custom cells">
+
+      <Table
+        className="mt-5"
+        aria-label="Example table with custom cells"
+        bottomContent={
+          <div className="flex w-full justify-center">
+            <Pagination
+              isCompact
+              showControls
+              showShadow
+              color="secondary"
+              page={filter.page}
+              total={totalPage}
+              onChange={(page) => setFilter({
+                ...filter,
+                page: page
+              })}
+            />
+          </div>
+        }
+      >
         <TableHeader columns={columns}>
           {(column) => (
             <TableColumn
@@ -117,7 +219,7 @@ export const AdminProducts = (): React.JSX.Element => {
             </TableColumn>
           )}
         </TableHeader>
-        <TableBody items={products}>
+        <TableBody items={products} isLoading={isLoading} loadingContent={<Spinner label="Loading..." />}>
           {(item) => (
             <TableRow key={item.id}>
               {(columnKey) => (

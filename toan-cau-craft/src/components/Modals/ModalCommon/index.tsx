@@ -3,6 +3,7 @@ import {
   ModalBody,
   ModalContent,
   ModalFooter,
+  ModalProps,
 } from "@nextui-org/react";
 import React from "react";
 
@@ -11,6 +12,7 @@ type CommonModalProps = {
   onPossitive?: () => void;
   disclosure: DisclosureProp;
   children?: React.ReactNode;
+  size?: any
 };
 
 type DisclosureProp = {
@@ -27,6 +29,7 @@ export default function ModalCommon({
   onCloseModal,
   children,
   disclosure,
+  size
 }: CommonModalProps) {
   return (
     <Modal
@@ -34,6 +37,7 @@ export default function ModalCommon({
       onClose={onCloseModal && onCloseModal}
       onOpenChange={disclosure.onOpenChange}
       placement="top-center"
+      size={size || "lg"}
     >
       <ModalContent className="overflow-visible">
         {() => (

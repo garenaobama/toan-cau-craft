@@ -24,16 +24,23 @@ import {
   columns,
   deleteaddCategoryByIds,
   fetchCategories,
+  handleUploadImage,
 } from "@/models/Category";
 import { renderCell } from "./RenderCell";
 import ModalCommon from "@/components/Modals/ModalCommon";
 import slugify from "slugify";
 import Lottie from "react-lottie";
 import { LottieApp } from "@/utils/lotties";
+import { AddingImageButton } from "./AddingImageButton";
 
 type CategoryInput = {
   name: string;
 };
+
+interface IExportDateImage {
+  name: string | undefined;
+  image: File | undefined;
+}
 
 export const AdminCategory = (): React.JSX.Element => {
   const addingModal = useDisclosure();
@@ -42,6 +49,7 @@ export const AdminCategory = (): React.JSX.Element => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isSuccess, setIsSuccess] = useState<boolean>(true);
   const [responseMessage, setResponseMessage] = useState<string>();
+  const [image, setImage] = useState<IExportDateImage>();
 
   const [categories, setCategories] = useState<Category[]>([]);
 
@@ -65,12 +73,20 @@ export const AdminCategory = (): React.JSX.Element => {
     addingModal.onClose();
     responseModal.onOpen();
     setIsLoading(true);
+    setResponseMessage("Đang tải ảnh lên bộ nhớ đám mây");
+    const imagesUpload = await handleUploadImage({
+      image: image?.image,
+      name: image?.name || ''
+    });
+
+    setResponseMessage("Đang cập nhật dữ liệu mới");
     addCategory({
       category: {
         name: values.name,
         slug: slugify(values.name, {
           lower: true,
         }),
+        image: imagesUpload
       },
     }).then((data) => {
       if (data.data) {
@@ -82,6 +98,7 @@ export const AdminCategory = (): React.JSX.Element => {
             slug: slugify(values.name, {
               lower: true,
             }),
+            image: imagesUpload
           },
           ...categories,
         ]);
@@ -120,6 +137,16 @@ export const AdminCategory = (): React.JSX.Element => {
         setIsSuccess(false);
       });
   };
+
+  const onImagesUploadPreview = (
+    { image, name }: IExportDateImage,
+  ) => {
+    setImage({
+      image,
+      name
+    })
+  };
+
 
   return (
     <div className="p-5">
@@ -177,7 +204,7 @@ export const AdminCategory = (): React.JSX.Element => {
       </Table>
 
       {/* //modal */}
-      <ModalCommon disclosure={addingModal}>
+      <ModalCommon disclosure={addingModal} size={"2xl"}>
         <h2 className="text-textPrimary text-2xl my-5">
           Thêm phân loại 1 (Category)
         </h2>
@@ -212,7 +239,11 @@ export const AdminCategory = (): React.JSX.Element => {
                   />
                 )}
               </Field>
-
+              <div>
+                <AddingImageButton 
+                  onImagesUploadPreview={({image, name}) => onImagesUploadPreview({image, name})}
+                />
+              </div>
               <div className="flex flex-row gap-5 mt-5">
                 <Button type="submit" color="primary">
                   Tiếp tục
