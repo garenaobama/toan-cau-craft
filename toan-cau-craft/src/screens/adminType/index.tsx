@@ -24,6 +24,7 @@ import {
   columns,
   deleteaddTypeByIds,
   fetchTypes,
+  updateType,
 } from "@/models/Type";
 import { renderCell } from "./RenderCell";
 import ModalCommon from "@/components/Modals/ModalCommon";
@@ -38,10 +39,12 @@ type TypeInput = {
 export const AdminType = (): React.JSX.Element => {
   const addingModal = useDisclosure();
   const responseModal = useDisclosure();
+  const updateModal = useDisclosure();
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isSuccess, setIsSuccess] = useState<boolean>(true);
   const [responseMessage, setResponseMessage] = useState<string>();
+  const [typeUpdate, setTypeUpdate] = useState<Type>();
 
   const [types, setTypes] = useState<Type[]>([]);
 
@@ -95,7 +98,45 @@ export const AdminType = (): React.JSX.Element => {
     });
     setSubmitting(false);
   };
-
+  
+  const onUpdate = async (
+    values: TypeInput,
+    { setSubmitting }: FormikHelpers<TypeInput>
+  ) => {
+    if(!typeUpdate?.id) return;
+    updateModal.onClose();
+    responseModal.onOpen();
+    setIsLoading(true);
+    updateType({
+      type: {
+        name: values.name,
+        slug: slugify(values.name, {
+          lower: true,
+        }),
+      },
+      typeId: typeUpdate.id
+    }).then((data) => {
+      if (data.data) {
+        setIsLoading(false);
+        setTypes(types.map(type => {
+          return {
+            ...type,
+            name: type.id === data.data.id ? values.name : type.name,
+            slug: type.id === data.data.id ? slugify(values.name, {
+              lower: true,
+            }) : type.slug,
+          }
+        }))
+        setResponseMessage("Cập nhật thành công");
+        setTimeout(() => {
+          responseModal.onClose();
+        }, 2000);
+      } else if (data.error) {
+        setResponseMessage("Có lỗi xảy ra: \n" + data.error);
+      }
+    });
+    setSubmitting(false);
+  };
   const resetState = () => {
     setIsLoading(false);
     setResponseMessage("Vui lòng đợi...");
@@ -120,6 +161,11 @@ export const AdminType = (): React.JSX.Element => {
         setIsSuccess(false);
       });
   };
+
+  const onClickEdit = (type: Type) => {
+    setTypeUpdate(type);
+    updateModal.onOpen();
+  }
 
   return (
     <div className="p-5">
@@ -168,6 +214,7 @@ export const AdminType = (): React.JSX.Element => {
                     type: item,
                     columnKey: columnKey,
                     onClickDelete: () => onClickDelete(item.id),
+                    onClickEdit: () => onClickEdit(item)
                   })}
                 </TableCell>
               )}
@@ -216,6 +263,51 @@ export const AdminType = (): React.JSX.Element => {
               <div className="flex flex-row gap-5 mt-5">
                 <Button type="submit" color="primary">
                   Tiếp tục
+                </Button>
+              </div>
+            </Form>
+          )}
+        </Formik>
+      </ModalCommon>
+      <ModalCommon disclosure={updateModal}>
+        <h2 className="text-textPrimary text-2xl my-5">
+          Sửa phân loại 2 (Type)
+        </h2>
+        <Formik
+          initialValues={{
+            name: typeUpdate?.name || '',
+          }}
+          validationSchema={AddProductSchema}
+          onSubmit={onUpdate}
+        >
+          {({ errors, touched }) => (
+            <Form>
+              <Field name="name">
+                {({ field }: FieldProps) => (
+                  <Input
+                    {...field}
+                    classNames={{
+                      label: "text-textSecondary mb-3",
+                      base: "bg-black flex gap-5",
+                      input: "placeholder:text-textTertiary text-xl",
+                      description: "text-textTertiary",
+                    }}
+                    className="text-textPrimary"
+                    name="name"
+                    size="lg"
+                    isInvalid={errors.name && touched.name ? true : false}
+                    label="Tên phân loại"
+                    variant="faded"
+                    errorMessage={
+                      errors.name && touched.name ? errors.name : null
+                    }
+                  />
+                )}
+              </Field>
+
+              <div className="flex flex-row gap-5 mt-5">
+                <Button type="submit" color="primary">
+                  Cập nhật
                 </Button>
               </div>
             </Form>

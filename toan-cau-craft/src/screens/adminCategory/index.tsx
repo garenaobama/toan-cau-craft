@@ -25,6 +25,7 @@ import {
   deleteaddCategoryByIds,
   fetchCategories,
   handleUploadImage,
+  updateCategory,
 } from "@/models/Category";
 import { renderCell } from "./RenderCell";
 import ModalCommon from "@/components/Modals/ModalCommon";
@@ -45,11 +46,13 @@ interface IExportDateImage {
 export const AdminCategory = (): React.JSX.Element => {
   const addingModal = useDisclosure();
   const responseModal = useDisclosure();
+  const updateModal = useDisclosure();
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isSuccess, setIsSuccess] = useState<boolean>(true);
   const [responseMessage, setResponseMessage] = useState<string>();
   const [image, setImage] = useState<IExportDateImage>();
+  const [categoryUpdate, setCategoryUpdate] = useState<Category>();
 
   const [categories, setCategories] = useState<Category[]>([]);
 
@@ -113,6 +116,61 @@ export const AdminCategory = (): React.JSX.Element => {
     setSubmitting(false);
   };
 
+  const onUpdate = async (
+    values: CategoryInput,
+    { setSubmitting }: FormikHelpers<CategoryInput>
+  ) => {
+    updateModal.onClose();
+    responseModal.onOpen();
+    setIsLoading(true);
+
+    if(!categoryUpdate) return;
+
+    let imageUpload = categoryUpdate?.image || '';
+    
+    if(image?.image){
+      setResponseMessage("Đang tải ảnh lên bộ nhớ đám mây");
+      imageUpload = await handleUploadImage({
+        image: image?.image,
+        name: image?.name || ''
+      });
+  
+      setResponseMessage("Đang cập nhật dữ liệu mới");
+    }
+    
+    updateCategory({
+      category: {
+        name: values.name,
+        slug: slugify(values.name, {
+          lower: true,
+        }),
+        image: imageUpload
+      },
+      categoryId: categoryUpdate?.id 
+    }).then((data) => {
+      if (data.data) {
+        setIsLoading(false);
+        setCategories(categories.map(category => {
+          return {
+            ...category,
+            name: category.id === data.data.id ? values.name : category.name,
+            image: category.id === data.data.id ? imageUpload : category.image,
+            slug: category.id === data.data.id ? slugify(values.name, {
+              lower: true,
+            }) : category.slug,
+          }
+        }))
+        setResponseMessage("Cập nhật thành công");
+        setTimeout(() => {
+          responseModal.onClose();
+        }, 2000);
+      } else if (data.error) {
+        setResponseMessage("Có lỗi xảy ra: \n" + data.error);
+      }
+    });
+    setSubmitting(false);
+  };
+
   const resetState = () => {
     setIsLoading(false);
     setResponseMessage("Vui lòng đợi...");
@@ -137,6 +195,10 @@ export const AdminCategory = (): React.JSX.Element => {
         setIsSuccess(false);
       });
   };
+  const onClickEdit = (category: Category) => {
+    setCategoryUpdate(category);
+    updateModal.onOpen();
+  }
 
   const onImagesUploadPreview = (
     { image, name }: IExportDateImage,
@@ -195,6 +257,7 @@ export const AdminCategory = (): React.JSX.Element => {
                     category: item,
                     columnKey: columnKey,
                     onClickDelete: () => onClickDelete(item.id),
+                    onClickEdit: () => onClickEdit(item)
                   })}
                 </TableCell>
               )}
@@ -242,11 +305,63 @@ export const AdminCategory = (): React.JSX.Element => {
               <div>
                 <AddingImageButton 
                   onImagesUploadPreview={({image, name}) => onImagesUploadPreview({image, name})}
+                  imageDefault={categoryUpdate?.image || ''}
                 />
               </div>
               <div className="flex flex-row gap-5 mt-5">
                 <Button type="submit" color="primary">
                   Tiếp tục
+                </Button>
+              </div>
+            </Form>
+          )}
+        </Formik>
+      </ModalCommon>
+
+      <ModalCommon disclosure={updateModal} size={"2xl"}>
+        <h2 className="text-textPrimary text-2xl my-5">
+          Sửa phân loại 1 (Category)
+        </h2>
+        <Formik
+          initialValues={{
+            name: categoryUpdate?.name || '',
+          }}
+          validationSchema={AddProductSchema}
+          onSubmit={onUpdate}
+        >
+          {({ errors, touched }) => (
+            <Form>
+              <Field name="name">
+                {({ field }: FieldProps) => (
+                  <Input
+                    {...field}
+                    classNames={{
+                      label: "text-textSecondary mb-3",
+                      base: "bg-black flex gap-5",
+                      input: "placeholder:text-textTertiary text-xl",
+                      description: "text-textTertiary",
+                    }}
+                    className="text-textPrimary"
+                    name="name"
+                    size="lg"
+                    isInvalid={errors.name && touched.name ? true : false}
+                    label="Tên phân loại"
+                    variant="faded"
+                    errorMessage={
+                      errors.name && touched.name ? errors.name : null
+                    }
+                  />
+                )}
+              </Field>
+              <div>
+                <AddingImageButton 
+                  onImagesUploadPreview={({image, name}) => onImagesUploadPreview({image, name})}
+                  imageDefault={categoryUpdate?.image || ''}
+                />
+              </div>
+              <div className="flex flex-row gap-5 mt-5">
+                <Button type="submit" color="primary">
+                  Cập nhật
                 </Button>
               </div>
             </Form>

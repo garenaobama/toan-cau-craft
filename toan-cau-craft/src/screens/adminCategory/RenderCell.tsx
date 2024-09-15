@@ -8,9 +8,10 @@ interface Props {
   category: Category;
   columnKey: string | React.Key;
   onClickDelete: (id:string) => void;
+  onClickEdit: (item: Category) => void;
 }
 
-export const renderCell = ({ category, columnKey, onClickDelete }: Props) => {
+export const renderCell = ({ category, columnKey, onClickDelete, onClickEdit }: Props) => {
   switch (columnKey) {
     case "name": {
       const valueCate = category[columnKey] + "";
@@ -23,13 +24,13 @@ export const renderCell = ({ category, columnKey, onClickDelete }: Props) => {
     case "actions":
       return (
         <div className="relative flex items-center justify-center gap-2">
-          <Tooltip color="success" content="Xem chi tiết">
+          {/* <Tooltip color="success" content="Xem chi tiết">
             <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
               <Eye color="red" />
             </span>
-          </Tooltip>
-          <Tooltip color="success" content="Chỉnh sửa sản phẩm">
-            <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
+          </Tooltip> */}
+          <Tooltip color="success" content="Chỉnh sửa sản phẩm" >
+            <span className="text-lg text-default-400 cursor-pointer active:opacity-50" onClick={() => onClickEdit(category)}>
               <Edit color="green" />
             </span>
           </Tooltip>

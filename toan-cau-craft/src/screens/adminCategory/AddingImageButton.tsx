@@ -13,7 +13,7 @@ export type AddingImageProps = {
   onImagesUploadPreview?: ({ image, name }: ExportDataImage) => void;
   onDelete?: () => void;
   onCommitChange?: ({ image, name }: ExportDataImage) => void;
-  imageDefault?: ImageProduct;
+  imageDefault?: string;
 };
 
 export const AddingImageButton = ({
@@ -24,10 +24,10 @@ export const AddingImageButton = ({
 }: AddingImageProps) => {
   const [image, setImage] = useState<File>();
   const [name, setName] = useState<string>();
-  const [preview, setPreview] = useState(imageDefault?.url ?? "");
-  const [color, setColor] = useState(imageDefault?.color ?? "none");
+  const [preview, setPreview] = useState(imageDefault);
   const [onChange, setOnChange] = useState(false);
 
+  
   const fileInputRef = useRef(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -49,6 +49,10 @@ export const AddingImageButton = ({
   };
 
   useEffect(() => {
+    setPreview(imageDefault)
+  }, [imageDefault])
+
+  useEffect(() => {
     if (onImagesUploadPreview != null) {
       onImagesUploadPreview({
         image: image,
@@ -61,7 +65,7 @@ export const AddingImageButton = ({
   return (
     <div className="border-2 rounded-xl border-secondary-50 p-3 grid grid-cols-5 mt-4">
       <div className="col-span-3">
-        <input
+        <Input
           ref={fileInputRef}
           className="text-textPrimary"
           type="file"
