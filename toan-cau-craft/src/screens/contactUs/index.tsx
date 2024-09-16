@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ButtonApp } from "@/components";
 import { TopBanner } from "@/components/TopBanner";
 import { cormorantSemiBold, latoRegular } from "@/fonts";
@@ -10,6 +10,7 @@ import { twMerge } from "tailwind-merge";
 import { sendMail } from "@/utils/Gmail";
 import { Button } from "@nextui-org/button";
 import { toast } from "react-toastify";
+import { ContactInfo, fetchContactInfo } from "@/models/ContactInfo";
 
 
 interface IForm {
@@ -22,6 +23,7 @@ export const ContactUs = (): React.JSX.Element => {
 
   const [form, setForm] = useState<IForm>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [contactInfo, setContactInfo] = useState<ContactInfo>();
 
   const handleFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
@@ -61,6 +63,14 @@ export const ContactUs = (): React.JSX.Element => {
       setIsLoading(false);
     }
   }
+  const getContactInfo = async () => {
+    const res = await fetchContactInfo();
+    setContactInfo(res);
+  }
+
+  useEffect(() => {
+    getContactInfo();
+  }, [])
   return (
     <div>
       <TopBanner
@@ -101,7 +111,7 @@ export const ContactUs = (): React.JSX.Element => {
                       "text-themeWhite text-sm"
                     )}
                   >
-                    0865 953 118
+                    {contactInfo?.phone || ''}
                   </p>
                 </div>
                 <div className="flex gap-3">
@@ -112,7 +122,7 @@ export const ContactUs = (): React.JSX.Element => {
                       "text-themeWhite text-sm"
                     )}
                   >
-                    myngheviet.2021@gmail.com
+                    {contactInfo?.email || ''}
                   </p>
                 </div>
                 <div className="flex gap-3">
@@ -123,8 +133,7 @@ export const ContactUs = (): React.JSX.Element => {
                       "text-themeWhite text-sm"
                     )}
                   >
-                    556E3, 147 Tan Mai, Tan Mai Street, Tan Mai Ward, Hoang Mai
-                    District, Hanoi City, Vietnam
+                    {contactInfo?.address || ''}
                   </p>
                 </div>
               </div>

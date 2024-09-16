@@ -33,6 +33,8 @@ import slugify from "slugify";
 import Lottie from "react-lottie";
 import { LottieApp } from "@/utils/lotties";
 import { AddingImageButton } from "./AddingImageButton";
+import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 type CategoryInput = {
   name: string;
@@ -44,6 +46,7 @@ interface IExportDateImage {
 }
 
 export const AdminCategory = (): React.JSX.Element => {
+  const router = useRouter();
   const addingModal = useDisclosure();
   const responseModal = useDisclosure();
   const updateModal = useDisclosure();
@@ -110,7 +113,12 @@ export const AdminCategory = (): React.JSX.Element => {
           responseModal.onClose();
         }, 2000);
       } else if (data.error) {
-        setResponseMessage("Có lỗi xảy ra: \n" + data.error);
+        if((data.error as any).code === "permission-denied") {
+          toast.error('Bạn không có quyền truy cập!')
+          router.push('/admin/login')
+        } else {
+          setResponseMessage("Có lỗi xảy ra: \n" + data.error);
+        }
       }
     });
     setSubmitting(false);
@@ -165,7 +173,12 @@ export const AdminCategory = (): React.JSX.Element => {
           responseModal.onClose();
         }, 2000);
       } else if (data.error) {
-        setResponseMessage("Có lỗi xảy ra: \n" + data.error);
+        if((data.error as any).code === "permission-denied") {
+          toast.error('Bạn không có quyền truy cập!')
+          router.push('/admin/login')
+        } else {
+          setResponseMessage("Có lỗi xảy ra: \n" + data.error);
+        }
       }
     });
     setSubmitting(false);
@@ -180,14 +193,24 @@ export const AdminCategory = (): React.JSX.Element => {
     setIsLoading(true);
     responseModal.onOpen();
     deleteaddCategoryByIds(id)
-      .then(() => {
-        setIsLoading(false);
-        setResponseMessage("Xoá thành công");
-        setIsSuccess(true);
-        setTimeout(() => {
-          responseModal.onClose();
-        }, 2000);
-        setCategories((prevCategories) => prevCategories.filter(category => category.id !== id));
+      .then((data) => {
+        if(data.success){
+          setIsLoading(false);
+          setResponseMessage("Xoá thành công");
+          setIsSuccess(true);
+          setTimeout(() => {
+            responseModal.onClose();
+          }, 2000);
+          setCategories((prevCategories) => prevCategories.filter(category => category.id !== id));
+        } else {
+          if((data.error as any).code === "permission-denied") {
+            toast.error('Bạn không có quyền truy cập!')
+            router.push('/admin/login')
+          } else {
+            setResponseMessage("Có lỗi xảy ra: \n" + data.error);
+          }
+        }
+        
       })
       .catch((e) => {
         setIsLoading(false);

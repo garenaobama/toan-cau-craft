@@ -38,6 +38,8 @@ import ModalConfirm, {
 } from "@/components/Modals/ModalConfirm";
 import { deleteImage, uploadImage } from "@/utils/CloudStorage";
 import { asyncState, inputSlots, statusObject } from "@/utils/constants";
+import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 export type AddProductInput = {
   name: string;
@@ -52,6 +54,7 @@ export const AdminProductUpdate = ({
 }: {
   slug: string;
 }): React.JSX.Element => {
+  const router = useRouter();
   const responseModal = useDisclosure();
   const confirmModal = useDisclosure();
 
@@ -117,7 +120,13 @@ export const AdminProductUpdate = ({
           responseModal.onClose();
         }, 2000);
       } else if (data.error) {
-        setResponseMessage("Có lỗi xảy ra: \n" + data.error);
+        if((data.error as any).code === "permission-denied") {
+          toast.error('Bạn không có quyền truy cập!')
+
+          router.push(`/admin/login`)
+        } else {
+          setResponseMessage("Có lỗi xảy ra: \n" + data.error);
+        }
       }
     });
     setSubmitting(false);
@@ -188,7 +197,13 @@ export const AdminProductUpdate = ({
           responseModal.onClose();
         }, 2000);
       } else if (data.error) {
-        setResponseMessage("Có lỗi xảy ra: \n" + data.error);
+        if((data.error as any).code === "permission-denied") {
+          toast.error('Bạn không có quyền truy cập!')
+
+          router.push(`/admin/login`)
+        } else {
+          setResponseMessage("Có lỗi xảy ra: \n" + data.error);
+        }
       }
     });
   };
@@ -242,7 +257,13 @@ export const AdminProductUpdate = ({
           responseModal.onClose();
         }, 2000);
       } else if (data.error) {
-        setResponseMessage("Có lỗi xảy ra: \n" + data.error);
+        if((data.error as any).code === "permission-denied") {
+          toast.error('Bạn không có quyền truy cập!')
+          
+          router.push(`/admin/login`)
+        } else {
+          setResponseMessage("Có lỗi xảy ra: \n" + data.error);
+        }
       }
     });
   };

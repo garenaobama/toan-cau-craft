@@ -1,15 +1,26 @@
+"use client"
 import { Icons } from "@/icons";
 import { Images } from "@/images";
 import { useAppSelector } from "@/store/store";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { latoRegular, leagueSpartanRegular } from "@/fonts";
 import { twMerge } from "tailwind-merge";
+import { ContactInfo, fetchContactInfo } from "@/models/ContactInfo";
 
 type FooterProp = {};
 
-export const Footer = ({}: FooterProp): React.JSX.Element => {
+export const Footer = ({ }: FooterProp): React.JSX.Element => {
+  const [contactInfo, setContactInfo] = useState<ContactInfo>();
+  const getContactInfo = async () => {
+    const res = await fetchContactInfo();
+    setContactInfo(res);
+  }
+
+  useEffect(() => {
+    getContactInfo();
+  }, [])
   return (
     <div className="flex p-5 flex-col gap-10 border-t border-backgroundDecor200 mt-10">
       <div className="grid sm:grid-cols-4 gap-16">
@@ -37,7 +48,7 @@ export const Footer = ({}: FooterProp): React.JSX.Element => {
               <p
                 className={twMerge(latoRegular.className, "text-textSecondary text-sm")}
               >
-                0865 953 118
+                {contactInfo?.phone || ''}
               </p>
             </div>
             <div className="flex gap-3">
@@ -45,7 +56,7 @@ export const Footer = ({}: FooterProp): React.JSX.Element => {
               <p
                 className={twMerge(latoRegular.className, "text-textSecondary text-sm")}
               >
-                myngheviet.2021@gmail.com
+                {contactInfo?.email || ''}
               </p>
             </div>
             <div className="flex gap-3">
@@ -53,8 +64,7 @@ export const Footer = ({}: FooterProp): React.JSX.Element => {
               <p
                 className={twMerge(latoRegular.className, "text-textSecondary text-sm")}
               >
-                556E3, 147 Tan Mai, Tan Mai Street, Tan Mai Ward, Hoang Mai
-                District, Hanoi City, Vietnam
+                {contactInfo?.address || ''}
               </p>
             </div>
           </div>
@@ -74,15 +84,21 @@ export const Footer = ({}: FooterProp): React.JSX.Element => {
               </p>
             </div>
             <div className="flex gap-6">
-                <Image src={Icons.FaceBookIcon} alt="facebook icon"/>
-                <Image src={Icons.InstagramIcon} alt="instagram icon"/>
-                <Image src={Icons.YoutubeIcon} alt="youtube icon"/>
+              <Link href={contactInfo?.facebook || "#"}>
+                <Image src={Icons.FaceBookIcon} alt="facebook icon" />
+              </Link>
+              <Link href={contactInfo?.instagram || "#"}>
+                <Image src={Icons.InstagramIcon} alt="instagram icon" />
+              </Link>
+              <Link href={contactInfo?.youtube || "#"}>
+                <Image src={Icons.YoutubeIcon} alt="youtube icon" />
+              </Link>
             </div>
           </div>
         </div>
       </div>
 
-      <div style={{height:1}} className="bg-backgroundDecor500 w-full"></div>
+      <div style={{ height: 1 }} className="bg-backgroundDecor500 w-full"></div>
 
       <div className="flex justify-end mb-10">
         <p

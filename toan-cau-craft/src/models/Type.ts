@@ -102,8 +102,10 @@ export const addType = async ({ type }: AddTypeProps) => {
 
   export const deleteaddTypeByIds = async (ids:string) => {
     try {
-      await deleteDoc(doc(firestore, COLLECTION_ID, ids))
+     await deleteDoc(doc(firestore, COLLECTION_ID, ids))
+      return { success: true};
     } catch (error) {
       console.error('Error deleting documents:', error);
+      return { success: false, error: error};
     }
   };

@@ -1,3 +1,4 @@
+"use client"
 import { ImageProduct } from "@/models/Product";
 import { Button, Image, Input } from "@nextui-org/react";
 import { PlusCircle, Save } from "lucide-react";

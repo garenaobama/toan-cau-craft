@@ -90,9 +90,11 @@ export const updateCategory = async ({ categoryId, category }: UpdateCategoryPro
 
 export const deleteaddCategoryByIds = async (ids: string) => {
   try {
-    await deleteDoc(doc(firestore, COLLECTION_ID, ids))
+    await deleteDoc(doc(firestore, COLLECTION_ID, ids));
+    return { success: true };
   } catch (error) {
     console.error('Error deleting documents:', error);
+    return { success: false, error: error };
   }
 };
 
