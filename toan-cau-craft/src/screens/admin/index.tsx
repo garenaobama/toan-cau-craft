@@ -12,6 +12,7 @@ import Image from "next/image";
 import { Icons } from "@/icons";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
+import EditBanner from "./EditBanner";
 
 type ContactInfo = {
   id: string;
@@ -112,6 +113,7 @@ export const Admin = (): React.JSX.Element => {
   });
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
+      <EditBanner/>
       <form onSubmit={formik.handleSubmit} className="bg-white p-6 rounded-lg shadow-lg w-full max-w-lg">
         <h1 className="text-2xl font-bold mb-6 text-center">Thông Tin Admin</h1>
 

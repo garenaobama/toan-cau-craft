@@ -14,6 +14,7 @@ import { SearchBox } from "@/components/SearchBox";
 import { SlidersHorizontal, X } from "lucide-react";
 import { asyncState } from "@/utils/constants";
 import { ProductSkeletonCard } from "@/components";
+import { getBannerByType } from "@/models/Banner";
 
 export const Products = (): React.JSX.Element => {
   const router = useRouter();
@@ -23,6 +24,16 @@ export const Products = (): React.JSX.Element => {
   const [totalPage, setTotalPage] = useState<number>(1);
   const [totalItems, setTotalItem] = useState<number>(1);
   const [state, setState] = useState<string>(asyncState.loading);
+  const [banner, setBanner] = useState();
+  const getBanner = async () => {
+    const data = await getBannerByType('product') as any;
+    
+    setBanner(data?.data?.url || "/images/products.png"); 
+  }
+
+  useEffect(() => {
+    getBanner();
+  }, [])
 
   const searchParams = useSearchParams();
   const filterCategory = searchParams.get("category") || undefined;
@@ -84,7 +95,7 @@ export const Products = (): React.JSX.Element => {
   return (
     <div className="bg-themeWhite">
       <TopBanner
-        src="/images/products.png"
+        src={banner || "/images/products.png"}
         h1="Handicraft"
         h2="MADE WITH LOVE"
         description="Lorem ipsum dolor sit amet consectetur. Tempor faucibus sit iaculis arcu felis. Volutpat sollicitudin tortor aliquam maecenas porttitor ac et blandit. Pretium urna at ac purus aliquet mauris. Sit feugiat mattis turpis congue justo."

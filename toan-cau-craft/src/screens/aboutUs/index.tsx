@@ -8,15 +8,27 @@ import {
   leagueSpartanMedium,
   leagueSpartanRegular,
 } from "@/fonts";
+import { getBannerByType } from "@/models/Banner";
 import { Card, CardBody, Tab, Tabs } from "@nextui-org/react";
 import Image from "next/image";
+import { useEffect, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
 export const AboutUs = (): React.JSX.Element => {
+  const [banner, setBanner] = useState();
+  const getBanner = async () => {
+    const data = await getBannerByType('product') as any;
+    
+    setBanner(data?.data?.url || "/images/about-us.png"); 
+  }
+
+  useEffect(() => {
+    getBanner();
+  }, [])
   return (
     <div>
       <TopBanner
-        src="/images/about-us.png"
+        src={banner || "/images/about-us.png"}
         h1="Handicraft"
         h2="MADE WITH LOVE"
         description="Lorem ipsum dolor sit amet consectetur. Tempor faucibus sit iaculis arcu felis. Volutpat sollicitudin tortor aliquam maecenas porttitor ac et blandit. Pretium urna at ac purus aliquet mauris. Sit feugiat mattis turpis congue justo."

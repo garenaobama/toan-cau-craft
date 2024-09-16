@@ -9,15 +9,26 @@ import { ButtonApp } from "@/components";
 import { ProductCard } from "@/components/ProductCard";
 import { useRouter } from "next/navigation";
 import { useAppSelector } from "@/store/store";
+import { useEffect, useState } from "react";
+import { getBannerByType } from "@/models/Banner";
 
 export const Home = (): React.JSX.Element => {
   const router = useRouter();
   const categories = useAppSelector((state) => state.category);
+  const [banner, setBanner] = useState();
+  const getBanner = async () => {
+    const data = await getBannerByType('home') as any;
+    setBanner(data?.data?.url || "/images/home-bg.png"); 
+  }
+
+  useEffect(() => {
+    getBanner();
+  }, [])
 
   return (
     <div>
       <TopBanner
-        src="/images/home-bg.png"
+        src={banner || "/images/home-bg.png"}
         h1="Handicraft"
         h2="MADE WITH LOVE"
         description="Lorem ipsum dolor sit amet consectetur. Tempor faucibus sit iaculis arcu felis. Volutpat sollicitudin tortor aliquam maecenas porttitor ac et blandit. Pretium urna at ac purus aliquet mauris. Sit feugiat mattis turpis congue justo."

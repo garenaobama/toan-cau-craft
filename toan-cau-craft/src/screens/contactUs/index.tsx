@@ -11,6 +11,7 @@ import { sendMail } from "@/utils/Gmail";
 import { Button } from "@nextui-org/button";
 import { toast } from "react-toastify";
 import { ContactInfo, fetchContactInfo } from "@/models/ContactInfo";
+import { getBannerByType } from "@/models/Banner";
 
 
 interface IForm {
@@ -24,6 +25,16 @@ export const ContactUs = (): React.JSX.Element => {
   const [form, setForm] = useState<IForm>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [contactInfo, setContactInfo] = useState<ContactInfo>();
+  const [banner, setBanner] = useState();
+  const getBanner = async () => {
+    const data = await getBannerByType('product') as any;
+    
+    setBanner(data?.data?.url || "/images/contact-us.png"); 
+  }
+
+  useEffect(() => {
+    getBanner();
+  }, [])
 
   const handleFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
@@ -74,7 +85,7 @@ export const ContactUs = (): React.JSX.Element => {
   return (
     <div>
       <TopBanner
-        src="/images/contact-us.png"
+        src={banner || "/images/contact-us.png"}
         h1="Handicraft"
         h2="MADE WITH LOVE"
         description="Lorem ipsum dolor sit amet consectetur. Tempor faucibus sit iaculis arcu felis. Volutpat sollicitudin tortor aliquam maecenas porttitor ac et blandit. Pretium urna at ac purus aliquet mauris. Sit feugiat mattis turpis congue justo."
