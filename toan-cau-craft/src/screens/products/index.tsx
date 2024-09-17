@@ -24,10 +24,10 @@ export const Products = (): React.JSX.Element => {
   const [totalPage, setTotalPage] = useState<number>(1);
   const [totalItems, setTotalItem] = useState<number>(1);
   const [state, setState] = useState<string>(asyncState.loading);
-  const [banner, setBanner] = useState();
+  const [banner, setBanner] = useState<string | undefined>();
+  
   const getBanner = async () => {
     const data = await getBannerByType('product') as any;
-    
     setBanner(data?.data?.url || "/images/products.png"); 
   }
 
@@ -91,7 +91,6 @@ export const Products = (): React.JSX.Element => {
     fetchProduct();
   }, [filter]);
 
-
   return (
     <div className="bg-themeWhite">
       <TopBanner
@@ -101,20 +100,26 @@ export const Products = (): React.JSX.Element => {
         description="Lorem ipsum dolor sit amet consectetur. Tempor faucibus sit iaculis arcu felis. Volutpat sollicitudin tortor aliquam maecenas porttitor ac et blandit. Pretium urna at ac purus aliquet mauris. Sit feugiat mattis turpis congue justo."
       />
 
-      <div className="mx-28 my-10 grid grid-cols-3">
-        <div className="col-span-1 mr-8 bg-themeWhite h-screen overflow-y-scroll sticky top-0">
-          <div className="sticky pt-8 bg-themeWhite top-0 z-10">
-            <div className="bg-themeWhite">
-              <div className="mb-8">
-                <h1
-                  className={twMerge(
-                    cormorantSemiBold.className,
-                    "text-textPrimary text-4xl bg-themeWhite"
-                  )}
-                >
-                  PRODUCTS
-                </h1>
-              </div>
+      <div className="mx-4 sm:mx-8 lg:mx-28 my-10 grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="md:col-span-1 bg-themeWhite h-auto md:h-screen overflow-y-scroll sticky top-0">
+          <div className="md:hidden p-4">
+            {/* Mobile filter button */}
+            <button className="w-full py-2 px-4 bg-blue-500 text-white rounded">
+              Filters
+            </button>
+            {/* Mobile filter dropdown here */}
+          </div>
+
+          <div className="hidden md:block">
+            <div className="sticky pt-8 bg-themeWhite top-0 z-10">
+              <h1
+                className={twMerge(
+                  cormorantSemiBold.className,
+                  "text-textPrimary text-4xl"
+                )}
+              >
+                PRODUCTS
+              </h1>
               <SearchBox
                 onSubmit={(keys) =>
                   setFilter({
@@ -124,39 +129,39 @@ export const Products = (): React.JSX.Element => {
                 }
                 className="w-full mt-3 bg-themeWhite"
               />
+              <div className="w-full h-5 bg-white-vertical"></div>
             </div>
-            <div className="w-full h-5 bg-white-vertical"></div>
+            <FilterBox
+              onCheck={(id) =>
+                setFilter({
+                  ...filter,
+                  category: id,
+                })
+              }
+              chosen={filter.category}
+              title="Category"
+              data={categories.map((item) => ({
+                value: item.id,
+                key: item.name,
+              }))}
+            />
+            <FilterBox
+              onCheck={(id) =>
+                setFilter({
+                  ...filter,
+                  type: id,
+                })
+              }
+              chosen={filter.type}
+              className="mt-4 pb-16"
+              title="Type"
+              data={types.map((item) => ({ value: item.id, key: item.name }))}
+            />
           </div>
-          <FilterBox
-            onCheck={(id) =>
-              setFilter({
-                ...filter,
-                category: id,
-              })
-            }
-            chosen={filter.category}
-            title="Category"
-            data={categories.map((item) => ({
-              value: item.id,
-              key: item.name,
-            }))}
-          />
-          <FilterBox
-            onCheck={(id) =>
-              setFilter({
-                ...filter,
-                type: id,
-              })
-            }
-            chosen={filter.type}
-            className="mt-4 pb-16"
-            title="Type"
-            data={types.map((item) => ({ value: item.id, key: item.name }))}
-          />
         </div>
 
-        <div className="col-span-2 relative">
-          <div className="sticky top-0 z-50 pt-3 rounded-2xl bg-transBlue  backdrop-blur">
+        <div className="md:col-span-2 relative">
+          <div className="sticky top-0 z-50 pt-3 rounded-2xl bg-transBlue backdrop-blur">
             <h3
               className={twMerge(
                 latoRegular.className,
@@ -194,9 +199,7 @@ export const Products = (): React.JSX.Element => {
               {filter.name && (
                 <FilterCard
                   onRemove={() => setFilter({ ...filter, name: undefined })}
-                  content={`Key words: ${
-                    filter.name
-                  }`}
+                  content={`Key words: ${filter.name}`}
                 />
               )}
             </div>
@@ -204,7 +207,7 @@ export const Products = (): React.JSX.Element => {
 
           <div ref={topProductRef}></div>
 
-          <div className="grid grid-cols-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {state === asyncState.success
               ? products.map((item) => (
                   <ProductCard
@@ -212,7 +215,7 @@ export const Products = (): React.JSX.Element => {
                     onClick={() => {
                       router.push("products/product-detail/" + item.slug);
                     }}
-                    className="col-span-1 m-2"
+                    className="m-2"
                     src={
                       item.images
                         ? item.images[0].url
@@ -257,7 +260,7 @@ const FilterCard = ({
       </p>
       {onRemove && (
         <button onClick={onRemove}>
-          <X size={15} color="#a6a6a6"></X>
+          <X size={15} color="#a6a6a6" />
         </button>
       )}
     </div>
