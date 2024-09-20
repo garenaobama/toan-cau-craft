@@ -8,7 +8,7 @@ type ProductCardProps = {
   category: string;
   name: string;
   className?: string;
-  onClick?: () => void;
+  onClick?:() => void;
 };
 
 export const ProductCard = ({
@@ -16,27 +16,16 @@ export const ProductCard = ({
   category,
   name,
   className,
-  onClick,
+  onClick
 }: ProductCardProps) => {
   return (
-    <button
-      onClick={onClick}
-      type="button"
-      className={twMerge(
-        "group relative rounded-lg p-3 hover:bg-anitiqueWhite",
-        className
-      )}
-    >
-      <div className="relative w-full overflow-hidden rounded-lg">
-        {/* Set a fixed height for the image container to maintain consistency */}
-        <div className="h-64 w-full flex justify-center">
-          <Image
-            src={src}
-            className="w-full h-full object-cover"
-            alt="product image"
-          />
+    <button onClick={onClick} type="button" className={twMerge("group relative rounded-lg p-3 hover:bg-anitiqueWhite", className)}>
+      <div className=" relative w-full overflow-hidden rounded-lg">
+        <div className="relative  h-full">
+          <img src={src} className="min-h-80 w-full " alt="product image"  />
         </div>
-        <div className="w-32 h-32 scale-0 group-hover:scale-100 transition duration-300 bg-themeWhite -top-16 -right-16 rounded-full absolute z-10 flex"></div>
+        <div className="w-32 h-32 scale-0 group-hover:scale-100 transition duration-300 bg-themeWhite -top-16 -right-16 rounded-full absolute z-10 flex">
+        </div>
         <p
           className={twMerge(
             latoRegular.className,

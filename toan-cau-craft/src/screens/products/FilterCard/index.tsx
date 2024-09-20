@@ -8,7 +8,7 @@ interface FilterCardProps {
 
 export const FilterCard: React.FC<FilterCardProps> = ({ content, onRemove }) => {
   return (
-    <div className="flex items-center bg-blue-100 text-blue-700 py-1 px-3 rounded-full mr-2">
+    <div className="flex justify-center items-start bg-blue-100 text-blue-700 py-1 px-3 rounded-full mr-2 text-themeDark">
       <span className="mr-2">{content}</span>
       {onRemove && (
         <button
