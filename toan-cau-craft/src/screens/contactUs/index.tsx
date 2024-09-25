@@ -78,7 +78,7 @@ export const ContactUs = (): React.JSX.Element => {
   }
 
   return (
-    <div className="px-4 md:px-8 lg:px-16">
+    <div className="md:px-8 lg:px-16">
       <TopBanner
         src={banner}
         h1="Handicraft"
